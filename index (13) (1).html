@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrafficPro - Admin & User Panel</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .gradient-bg { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); }
+        .admin-sidebar { background: #1f2937; color: white; }
+        
+        /* Drawer Transition */
+        #mobile-drawer { transition: transform 0.3s ease-in-out; }
+        .drawer-closed { transform: translateX(-100%); }
+        .drawer-open { transform: translateX(0); }
+        @media (min-width: 768px) { #mobile-drawer { transform: translateX(0) !important; } }
+
+        /* Notification Badge Animation */
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .animate-pulse-red { animation: pulse-red 2s infinite; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen overflow-hidden flex flex-col">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[70] flex items-center justify-center bg-white hidden">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-indigo-600"></div>
+    </div>
+
+    <!-- 1. AUTH SECTION -->
+    <div id="auth-section" class="flex-grow flex items-center justify-center gradient-bg p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full glass-effect my-auto">
+            <div class="text-center mb-6">
+                <div class="h-16 w-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">TrafficPro</h2>
+                <p class="text-gray-500 text-sm mt-2">আয় এবং ট্রাফিক বৃদ্ধির সেরা প্ল্যাটফর্ম</p>
+            </div>
+
+            <!-- Toggle Buttons -->
+            <div class="flex bg-gray-100 rounded-lg p-1 mb-6">
+                <button onclick="toggleAuthMode('login')" id="btn-login-mode" class="flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition">লগিন</button>
+                <button onclick="toggleAuthMode('register')" id="btn-register-mode" class="flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition">রেজিস্টার</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইমেইল (Email)</label>
+                    <input type="email" id="loginEmail" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="example@mail.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="loginPass" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="********">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    প্রবেশ করুন
+                </button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইউজারনেম (Username)</label>
+                    <input type="text" id="regUsername" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="unique name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইমেইল (Email)</label>
+                    <input type="email" id="regEmail" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="example@mail.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="regPass" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Min 6 chars">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">রেফার কোড (Optional)</label>
+                    <input type="text" id="regRefCode" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Referral Code">
+                </div>
+                <button onclick="handleRegister()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    একাউন্ট খুলুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP SECTION -->
+    <div id="app-section" class="hidden flex h-screen relative">
+        
+        <!-- Mobile Drawer Overlay -->
+        <div id="drawer-overlay" onclick="toggleDrawer()" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+        <!-- SIDEBAR -->
+        <aside id="mobile-drawer" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl drawer-closed md:relative md:flex flex-col h-full">
+            <div class="p-6 flex justify-between items-center border-b bg-indigo-600 text-white">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-bolt text-xl"></i>
+                    <span class="text-xl font-bold">TrafficPro</span>
+                </div>
+                <button onclick="toggleDrawer()" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a onclick="navigate('dashboard')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition bg-indigo-50 font-bold">
+                    <i class="fas fa-home w-6 text-indigo-500"></i> <span>ড্যাশবোর্ড</span>
+                </a>
+                <a onclick="navigate('wallet')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-wallet w-6 text-green-500"></i> <span>ওয়ালেট</span>
+                </a>
+                <a onclick="navigate('earn')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-coins w-6 text-yellow-500"></i> <span>আয় করুন</span>
+                </a>
+                <a onclick="navigate('campaign')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-bullhorn w-6 text-purple-500"></i> <span>ক্যাম্পেইন</span>
+                </a>
+                <a onclick="navigate('referral')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-users w-6 text-blue-500"></i> <span>রেফারেল</span>
+                </a>
+
+                <!-- Admin Link (Protected) -->
+                <a id="admin-link" onclick="navigate('admin-panel')" class="hidden flex items-center space-x-3 text-white bg-gray-800 p-3 rounded-lg hover:bg-gray-700 cursor-pointer transition mt-4 shadow-lg border border-gray-600">
+                    <i class="fas fa-user-shield w-6 text-red-500"></i> <span class="font-bold">Admin Panel</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t bg-gray-50">
+                <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-100 p-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt"></i> <span>লগআউট</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden w-full">
+            <!-- Header -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center z-30">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleDrawer()" class="md:hidden text-gray-700 focus:outline-none p-2 rounded hover:bg-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold text-gray-800" id="page-title">ড্যাশবোর্ড</h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <!-- Notification Bell -->
+                    <div class="relative cursor-pointer" onclick="toggleNotifications()">
+                        <i class="fas fa-bell text-xl text-gray-600 hover:text-indigo-600 transition"></i>
+                        <span id="notif-badge" class="hidden absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse-red"></span>
+                        <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                            <div id="notif-list" class="max-h-64 overflow-y-auto p-2"></div>
+                        </div>
+                    </div>
+                    <!-- Points -->
+                    <div class="bg-indigo-100 text-indigo-800 px-4 py-1.5 rounded-full font-bold text-sm flex items-center shadow-sm">
+                        <i class="fas fa-coins mr-2 text-yellow-600"></i> <span id="displayPoints">0</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 relative">
+                
+                <!-- USER DASHBOARD -->
+                <div id="view-dashboard" class="view-section space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                            <h3 class="text-3xl font-bold mt-1"><span id="dashPoints">0</span> Pts</h3>
+                            <p class="opacity-80">ব্যালেন্স</p>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-green-500 relative">
+                            <p class="text-gray-500 font-bold">ডেইলি চেক-ইন</p>
+                            <button onclick="claimBonus()" class="mt-2 w-full bg-green-50 text-green-700 py-2 rounded-lg font-bold hover:bg-green-100 transition">বোনাস নিন</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WALLET -->
+                <div id="view-wallet" class="view-section hidden max-w-4xl mx-auto">
+                    <div class="flex bg-white rounded-xl shadow p-1 mb-6">
+                        <button onclick="switchWalletTab('deposit')" id="tab-deposit" class="flex-1 py-2 rounded-lg font-bold bg-indigo-50 text-indigo-600">Deposit</button>
+                        <button onclick="switchWalletTab('withdraw')" id="tab-withdraw" class="flex-1 py-2 rounded-lg font-bold text-gray-500">Withdraw</button>
+                    </div>
+                    <div id="deposit-form" class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold mb-4 text-indigo-600">ডিপোজিট করুন</h3>
+                        <div class="bg-yellow-50 p-3 text-sm text-yellow-700 mb-4 rounded">
+                            বিকাশ/নগদ: <b id="adminBkash">01xxxxxxxxx</b> (Personal)
+                        </div>
+                        <input type="number" id="depAmount" class="w-full border p-2 rounded mt-2" placeholder="Amount (BDT)">
+                        <input type="text" id="depTrx" class="w-full border p-2 rounded mt-2" placeholder="TrxID">
+                        <input type="text" id="depSender" class="w-full border p-2 rounded mt-2" placeholder="Sender Number">
+                        <select id="depMethod" class="w-full border p-2 rounded mt-2"><option>Bkash</option><option>Nagad</option></select>
+                        <button onclick="submitDeposit()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold mt-4">রিকুয়েস্ট পাঠান</button>
+                    </div>
+                    <div id="withdraw-form" class="bg-white rounded-xl shadow-md p-6 hidden">
+                        <h3 class="text-lg font-bold mb-4 text-green-600">উইথড্র করুন</h3>
+                        <p class="text-xs text-red-500 mb-2">মিনিমাম উইথড্র: <span id="adminMinWithdraw">5000</span> Points</p>
+                        <input type="number" id="withPoints" class="w-full border p-2 rounded mt-2" placeholder="Points Amount">
+                        <input type="text" id="withAccount" class="w-full border p-2 rounded mt-2" placeholder="Account Number">
+                        <select id="withMethod" class="w-full border p-2 rounded mt-2"><option>Bkash</option><option>Nagad</option></select>
+                        <button onclick="submitWithdraw()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold mt-4">উইথড্র রিকুয়েস্ট</button>
+                    </div>
+                    <div class="mt-8 bg-white rounded-xl shadow overflow-hidden">
+                         <table class="min-w-full text-sm text-left"><tbody id="trxHistory" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+
+                <!-- EARN -->
+                <div id="view-earn" class="view-section hidden">
+                    <button onclick="loadTasks()" class="mb-4 text-indigo-600 float-right hover:bg-indigo-50 px-3 py-1 rounded"><i class="fas fa-sync"></i> রিফ্রেশ</button>
+                    <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-4 clear-both"></div>
+                </div>
+
+                <!-- CAMPAIGN -->
+                <div id="view-campaign" class="view-section hidden">
+                    <div class="bg-white rounded-xl shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4">নতুন ক্যাম্পেইন</h3>
+                        <input type="url" id="campUrl" placeholder="Website URL" class="w-full border p-2 rounded mb-2">
+                        <input type="number" id="campLimit" placeholder="Views Limit" class="w-full border p-2 rounded mb-2">
+                        <select id="campType" class="w-full border p-2 rounded mb-2">
+                            <option value="direct">Direct Link (50 Pts)</option>
+                            <option value="website">Website (100 Pts)</option>
+                        </select>
+                        <button onclick="createCampaign()" class="w-full bg-indigo-600 text-white py-2 rounded font-bold">Create</button>
+                    </div>
+                    <div id="myCampaignList" class="space-y-2"></div>
+                </div>
+
+                <!-- REFERRAL -->
+                <div id="view-referral" class="view-section hidden text-center">
+                    <div class="bg-white rounded-xl shadow p-8">
+                        <h3 class="text-2xl font-bold">আপনার রেফার কোড</h3>
+                        <div class="text-3xl font-mono text-indigo-600 my-4" id="myRefCode">...</div>
+                        <button onclick="copyRefCode()" class="bg-indigo-100 text-indigo-600 px-4 py-2 rounded">Copy</button>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- ADMIN PANEL (UPDATED) -->
+                <!-- ========================================== -->
+                <div id="view-admin-panel" class="view-section hidden">
+                    
+                    <!-- Admin Tabs -->
+                    <div class="flex overflow-x-auto gap-2 mb-6 pb-2 border-b">
+                        <button onclick="switchAdminTab('home')" class="admin-tab px-4 py-2 bg-gray-800 text-white rounded whitespace-nowrap">Home</button>
+                        <button onclick="switchAdminTab('users')" class="admin-tab px-4 py-2 bg-white text-gray-800 border rounded whitespace-nowrap">Users</button>
+                        <button onclick="switchAdminTab('finance')" class="admin-tab px-4 py-2 bg-white text-gray-800 border rounded whitespace-nowrap">Finance</button>
+                        <button onclick="switchAdminTab('settings')" class="admin-tab px-4 py-2 bg-white text-gray-800 border rounded whitespace-nowrap">Settings</button>
+                        <button onclick="switchAdminTab('notif')" class="admin-tab px-4 py-2 bg-white text-gray-800 border rounded whitespace-nowrap">Notifications</button>
+                    </div>
+
+                    <!-- 1. Admin Home -->
+                    <div id="admin-home" class="admin-subview">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-white p-4 rounded shadow border-l-4 border-blue-500">
+                                <p class="text-gray-500 text-xs">Total Users</p>
+                                <h3 class="text-2xl font-bold" id="admTotalUsers">-</h3>
+                            </div>
+                            <div class="bg-white p-4 rounded shadow border-l-4 border-yellow-500">
+                                <p class="text-gray-500 text-xs">Pending Deposits</p>
+                                <h3 class="text-2xl font-bold" id="admPendDep">-</h3>
+                            </div>
+                            <div class="bg-white p-4 rounded shadow border-l-4 border-red-500">
+                                <p class="text-gray-500 text-xs">Pending Withdraws</p>
+                                <h3 class="text-2xl font-bold" id="admPendWith">-</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. User Management -->
+                    <div id="admin-users" class="admin-subview hidden">
+                        <div class="flex justify-between mb-4">
+                            <input type="text" id="searchUser" placeholder="Search Email/User..." class="border p-2 rounded w-2/3">
+                            <button onclick="loadAdminUsers()" class="bg-gray-800 text-white px-4 rounded">Search</button>
+                        </div>
+                        <div class="bg-white rounded shadow overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-100 text-gray-600">
+                                    <tr>
+                                        <th class="p-3">User</th>
+                                        <th class="p-3">Points</th>
+                                        <th class="p-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUserList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 3. Finance (Deposit/Withdraw) -->
+                    <div id="admin-finance" class="admin-subview hidden">
+                        <!-- Sub-tabs for Pending / History -->
+                        <div class="flex space-x-2 mb-4">
+                            <button onclick="toggleFinanceView('pending')" id="btn-fin-pending" class="px-4 py-1 rounded bg-indigo-600 text-white text-sm font-bold">Pending Requests</button>
+                            <button onclick="toggleFinanceView('history')" id="btn-fin-history" class="px-4 py-1 rounded bg-gray-200 text-gray-700 text-sm font-bold">Transaction History</button>
+                        </div>
+
+                        <!-- Pending List -->
+                        <div id="fin-pending-view">
+                            <h3 class="font-bold text-lg mb-2 text-indigo-700 border-b pb-2">Pending Requests</h3>
+                            <div id="adminFinanceList" class="space-y-3"></div>
+                        </div>
+
+                        <!-- History List -->
+                        <div id="fin-history-view" class="hidden">
+                            <h3 class="font-bold text-lg mb-2 text-gray-700 border-b pb-2">Completed Transactions</h3>
+                            <div class="bg-white rounded shadow overflow-x-auto">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="p-2">Type</th>
+                                            <th class="p-2">User/Details</th>
+                                            <th class="p-2">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminHistoryList"></tbody>
+                                </table>
+                            </div>
+                            <button onclick="loadAdminHistory()" class="mt-2 text-xs text-blue-600 hover:underline">Refresh History</button>
+                        </div>
+                    </div>
+
+                    <!-- 4. Settings -->
+                    <div id="admin-settings" class="admin-subview hidden">
+                        <div class="bg-white p-6 rounded shadow max-w-xl">
+                            <h3 class="font-bold text-lg mb-4">Global Website Settings</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500">Admin Bkash Number</label>
+                                    <input type="text" id="setBkash" class="w-full border p-2 rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500">Minimum Withdraw (Points)</label>
+                                    <input type="number" id="setMinWith" class="w-full border p-2 rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500">Notice Message (Marquee)</label>
+                                    <input type="text" id="setNotice" class="w-full border p-2 rounded">
+                                </div>
+                                <button onclick="saveAdminSettings()" class="bg-green-600 text-white w-full py-2 rounded font-bold hover:bg-green-700">Save Settings</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Notifications -->
+                    <div id="admin-notif" class="admin-subview hidden">
+                        <div class="bg-white p-6 rounded shadow max-w-xl">
+                            <label class="block font-bold">Send Notification</label>
+                            <input type="text" id="admNotifTarget" value="all" placeholder="UID or 'all'" class="w-full border p-2 rounded mt-2">
+                            <textarea id="admNotifMsg" class="w-full border p-2 rounded mt-2" placeholder="Message"></textarea>
+                            <button onclick="sendAdminNotification()" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpkwRH32c7RaFU7IZJznATjMQPmbaJjb0", 
+            authDomain: "diamond-t-a023f.firebaseapp.com",
+            projectId: "diamond-t-a023f",
+            storageBucket: "diamond-t-a023f.appspot.com",
+            messagingSenderId: "123433072712",
+            appId: "1:123433072712:web:c21c8ff8ef55b89f35407d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        let currentUser = null;
+        let globalSettings = { minWithdraw: 5000, bkash: "01880527986" }; // Defaults
+
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            loadGlobalSettings();
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUser = { uid: user.uid, ...userDoc.data() };
+                        if(currentUser.isBanned) {
+                            alert("You are BANNED!");
+                            auth.signOut();
+                            return;
+                        }
+                        loadApp();
+                    } else { auth.signOut(); }
+                } else {
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('auth-section').classList.remove('hidden');
+                    document.getElementById('app-section').classList.add('hidden');
+                }
+            });
+        };
+
+        async function loadGlobalSettings() {
+            try {
+                const doc = await db.collection('settings').doc('general').get();
+                if(doc.exists) {
+                    globalSettings = doc.data();
+                    // Update UI texts
+                    document.getElementById('adminBkash').innerText = globalSettings.bkash;
+                    document.getElementById('adminMinWithdraw').innerText = globalSettings.minWithdraw;
+                    // Pre-fill Admin Inputs
+                    document.getElementById('setBkash').value = globalSettings.bkash;
+                    document.getElementById('setMinWith').value = globalSettings.minWithdraw;
+                    document.getElementById('setNotice').value = globalSettings.notice || "";
+                }
+            } catch(e) { console.log("Settings load error", e); }
+        }
+
+        // --- AUTH & NAV ---
+        function toggleAuthMode(mode) {
+            document.getElementById('login-form').classList.toggle('hidden', mode !== 'login');
+            document.getElementById('register-form').classList.toggle('hidden', mode !== 'register');
+            // Button Styles (simplified for brevity)
+            document.getElementById('btn-login-mode').classList.toggle('bg-white', mode === 'login');
+            document.getElementById('btn-register-mode').classList.toggle('bg-white', mode === 'register');
+        }
+
+        async function handleLogin() {
+            const e = document.getElementById('loginEmail').value, p = document.getElementById('loginPass').value;
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { Swal.fire('Error', err.message, 'error'); }
+        }
+
+        async function handleRegister() {
+            const u = document.getElementById('regUsername').value.toLowerCase(), e = document.getElementById('regEmail').value, p = document.getElementById('regPass').value, r = document.getElementById('regRefCode').value;
+            if(u.length < 4 || p.length < 6) return Swal.fire('Error', 'Invalid Inputs', 'warning');
+            try {
+                const check = await db.collection('users').where('username','==',u).get();
+                if(!check.empty) throw new Error("Username taken");
+                const cred = await auth.createUserWithEmailAndPassword(e, p);
+                
+                // Referral Logic
+                if(r) {
+                    const refQ = await db.collection('users').where('username','==',r).get();
+                    if(!refQ.empty) await db.collection('users').doc(refQ.docs[0].id).update({ points: firebase.firestore.FieldValue.increment(100) });
+                }
+
+                await db.collection('users').doc(cred.user.uid).set({
+                    username: u, email: e, points: 50, role: 'user', createdAt: Date.now(), isBanned: false
+                });
+            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+        }
+
+        function logout() { auth.signOut(); location.reload(); }
+
+        function loadApp() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('app-section').classList.remove('hidden');
+            document.getElementById('loader').classList.add('hidden');
+            
+            // Check Admin Role
+            if(currentUser.role === 'admin') {
+                document.getElementById('admin-link').classList.remove('hidden');
+            }
+
+            db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
+                currentUser = { uid: currentUser.uid, ...doc.data() };
+                document.getElementById('displayPoints').innerText = currentUser.points;
+                document.getElementById('dashPoints').innerText = currentUser.points;
+                document.getElementById('myRefCode').innerText = currentUser.username;
+            });
+            
+            navigate('dashboard');
+        }
+
+        function navigate(view) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            document.getElementById('page-title').innerText = view.toUpperCase();
+            if(window.innerWidth < 768) toggleDrawer(true);
+
+            if(view === 'earn') loadTasks();
+            if(view === 'wallet') loadTransactions();
+            if(view === 'campaign') loadMyCampaigns();
+            if(view === 'admin-panel') loadAdminDashboard();
+        }
+
+        function toggleDrawer(close=false) {
+            const d = document.getElementById('mobile-drawer');
+            if(close) { d.classList.remove('drawer-open'); d.classList.add('drawer-closed'); document.getElementById('drawer-overlay').classList.add('hidden'); }
+            else { d.classList.toggle('drawer-open'); d.classList.toggle('drawer-closed'); document.getElementById('drawer-overlay').classList.toggle('hidden'); }
+        }
+
+        // --- USER FEATURES ---
+        async function claimBonus() {
+            const today = new Date().toISOString().split('T')[0];
+            if(currentUser.lastCheckIn === today) return Swal.fire('Oops', 'Already claimed today', 'info');
+            await db.collection('users').doc(currentUser.uid).update({
+                points: firebase.firestore.FieldValue.increment(20),
+                lastCheckIn: today
+            });
+            Swal.fire('Success', '+20 Points', 'success');
+        }
+
+        // Task Logic (24h Limit)
+        async function loadTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = 'Loading...';
+            const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
+            const completedMap = {};
+            completedSnap.forEach(d => completedMap[d.id] = d.data().timestamp);
+            
+            const campaigns = await db.collection('campaigns').where('active', '==', true).orderBy('createdAt', 'desc').limit(20).get();
+            list.innerHTML = '';
+            
+            campaigns.forEach(doc => {
+                const d = doc.data();
+                const lastRun = completedMap[doc.id] || 0;
+                // 24h Check
+                if(Date.now() - lastRun > 86400000 && d.clicks < d.limit && d.owner !== currentUser.uid) {
+                    list.innerHTML += `
+                    <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                        <div><h4 class="font-bold text-indigo-600">${d.type.toUpperCase()}</h4><p class="text-xs">Reward: ${d.type=='website'?100:50}</p></div>
+                        <button onclick="startTask('${doc.id}', '${d.url}', ${d.type=='website'?100:50}, ${d.type=='website'?60:30})" class="bg-indigo-600 text-white px-3 py-1 rounded">View</button>
+                    </div>`;
+                }
+            });
+            if(list.innerHTML === '') list.innerHTML = 'No tasks available.';
+        }
+
+        function startTask(id, url, pts, sec) {
+            window.open(url, '_blank');
+            let t = sec;
+            Swal.fire({
+                title: 'Wait...', html: `<h1 class="text-4xl font-bold">${t}</h1>`, showConfirmButton: false, allowOutsideClick: false,
+                didOpen: () => {
+                    const i = setInterval(async () => {
+                        t--; Swal.getHtmlContainer().querySelector('h1').innerText = t;
+                        if(t<=0) {
+                            clearInterval(i);
+                            await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(pts) });
+                            await db.collection('campaigns').doc(id).update({ clicks: firebase.firestore.FieldValue.increment(1) });
+                            await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(id).set({ timestamp: Date.now() });
+                            Swal.fire('Success', `+${pts} Points`, 'success');
+                            loadTasks();
+                        }
+                    }, 1000);
+                }
+            });
+        }
+
+        // Wallet Logic
+        function switchWalletTab(t) {
+            document.getElementById('deposit-form').classList.toggle('hidden', t!=='deposit');
+            document.getElementById('withdraw-form').classList.toggle('hidden', t!=='withdraw');
+            // Simplified styling toggle
+            document.getElementById('tab-deposit').className = t==='deposit' ? "flex-1 py-2 rounded-lg font-bold bg-indigo-50 text-indigo-600" : "flex-1 py-2 rounded-lg font-bold text-gray-500";
+            document.getElementById('tab-withdraw').className = t==='withdraw' ? "flex-1 py-2 rounded-lg font-bold bg-green-50 text-green-600" : "flex-1 py-2 rounded-lg font-bold text-gray-500";
+        }
+
+        async function submitDeposit() {
+            const amt = parseFloat(document.getElementById('depAmount').value), trx = document.getElementById('depTrx').value, snd = document.getElementById('depSender').value;
+            if(!amt || !trx) return Swal.fire('Error', 'Fill all fields', 'error');
+            await db.collection('transactions').add({ userId: currentUser.uid, type: 'deposit', amount: amt, trx, sender: snd, method: document.getElementById('depMethod').value, status: 'pending', timestamp: Date.now() });
+            Swal.fire('Submitted', 'Wait for approval', 'success');
+            loadTransactions();
+        }
+
+        async function submitWithdraw() {
+            const pts = parseInt(document.getElementById('withPoints').value), acc = document.getElementById('withAccount').value;
+            if(pts < globalSettings.minWithdraw) return Swal.fire('Error', `Min withdraw ${globalSettings.minWithdraw}`, 'warning');
+            if(currentUser.points < pts) return Swal.fire('Error', 'Low Balance', 'error');
+            
+            await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-pts) });
+            await db.collection('transactions').add({ userId: currentUser.uid, type: 'withdraw', points: pts, account: acc, method: document.getElementById('withMethod').value, status: 'pending', timestamp: Date.now() });
+            Swal.fire('Submitted', 'Points deducted. Wait for payment.', 'success');
+            loadTransactions();
+        }
+
+        function loadTransactions() {
+            db.collection('transactions').where('userId', '==', currentUser.uid).orderBy('timestamp', 'desc').limit(10).onSnapshot(s => {
+                const b = document.getElementById('trxHistory'); b.innerHTML = '';
+                s.forEach(d => {
+                    const t = d.data();
+                    b.innerHTML += `<tr class="border-b"><td class="p-2 capitalize">${t.type}</td><td class="p-2">${t.amount||t.points}</td><td class="p-2 text-xs ${t.status=='approved'?'text-green-600':t.status=='pending'?'text-yellow-600':'text-red-600'} uppercase">${t.status}</td></tr>`;
+                });
+            });
+        }
+
+        // Campaign Create
+        async function createCampaign() {
+            const url = document.getElementById('campUrl').value, lim = parseInt(document.getElementById('campLimit').value), type = document.getElementById('campType').value;
+            const cost = lim * (type==='website'?100:50);
+            if(currentUser.points < cost) return Swal.fire('Error', 'Need '+cost+' Points', 'warning');
+            
+            await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-cost) });
+            await db.collection('campaigns').add({ owner: currentUser.uid, url, limit: lim, type, clicks: 0, active: true, createdAt: Date.now() });
+            Swal.fire('Success', 'Campaign Started', 'success');
+            loadMyCampaigns();
+        }
+
+        function loadMyCampaigns() {
+            db.collection('campaigns').where('owner','==',currentUser.uid).onSnapshot(s => {
+                const d = document.getElementById('myCampaignList'); d.innerHTML = '';
+                s.forEach(doc => {
+                    const c = doc.data();
+                    d.innerHTML += `<div class="bg-white p-3 rounded shadow flex justify-between"><span class="text-sm truncate w-1/2">${c.url}</span> <span class="font-bold">${c.clicks}/${c.limit}</span></div>`;
+                });
+            });
+        }
+        
+        function copyRefCode() { navigator.clipboard.writeText(currentUser.username); Swal.fire('Copied', '', 'success'); }
+
+
+        // ===============================================
+        // ADMIN PANEL LOGIC (NEW & FIXED)
+        // ===============================================
+
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.admin-subview').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`admin-${tab}`).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab').forEach(el => { el.classList.remove('bg-gray-800','text-white'); el.classList.add('bg-white','text-gray-800'); });
+            event.target.classList.remove('bg-white','text-gray-800'); event.target.classList.add('bg-gray-800','text-white');
+            
+            if(tab === 'users') loadAdminUsers();
+            if(tab === 'finance') { loadAdminFinance(); loadAdminHistory(); }
+            if(tab === 'home') loadAdminStats();
+        }
+
+        // 1. Admin Stats
+        async function loadAdminStats() {
+            // Note: In real app, use counters. Here estimating via list size (limited)
+            const u = await db.collection('users').get();
+            const d = await db.collection('transactions').where('type','==','deposit').where('status','==','pending').get();
+            const w = await db.collection('transactions').where('type','==','withdraw').where('status','==','pending').get();
+            
+            document.getElementById('admTotalUsers').innerText = u.size;
+            document.getElementById('admPendDep').innerText = d.size;
+            document.getElementById('admPendWith').innerText = w.size;
+        }
+
+        // 2. Admin Users
+        async function loadAdminUsers() {
+            const list = document.getElementById('adminUserList');
+            const search = document.getElementById('searchUser').value;
+            let q = db.collection('users').orderBy('createdAt', 'desc').limit(20);
+            if(search) q = db.collection('users').where('email', '==', search); 
+
+            const snap = await q.get();
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const u = doc.data();
+                list.innerHTML += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3">
+                        <div class="font-bold">${u.username}</div>
+                        <div class="text-xs text-gray-400">${u.email}</div>
+                    </td>
+                    <td class="p-3 font-mono">${u.points}</td>
+                    <td class="p-3 flex gap-2">
+                        <button onclick="adminEditPoints('${doc.id}', ${u.points})" class="text-blue-600 text-xs border p-1 rounded">Edit Pts</button>
+                        <button onclick="adminToggleBan('${doc.id}', ${u.isBanned})" class="text-white text-xs p-1 rounded ${u.isBanned?'bg-green-500':'bg-red-500'}">
+                            ${u.isBanned ? 'Unban' : 'Ban'}
+                        </button>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        async function adminEditPoints(uid, oldPts) {
+            const { value: points } = await Swal.fire({ title: 'Enter New Points', input: 'number', inputValue: oldPts });
+            if (points) {
+                await db.collection('users').doc(uid).update({ points: parseInt(points) });
+                loadAdminUsers();
+                Swal.fire('Updated', '', 'success');
+            }
+        }
+
+        async function adminToggleBan(uid, currentStatus) {
+            await db.collection('users').doc(uid).update({ isBanned: !currentStatus });
+            loadAdminUsers();
+            Swal.fire('Done', 'User status updated', 'success');
+        }
+
+        // 3. Admin Finance (PENDING LIST)
+        function loadAdminFinance() {
+            const list = document.getElementById('adminFinanceList');
+            // Listens ONLY for pending status. If status changes to approved/rejected, it disappears automatically.
+            db.collection('transactions').where('status', '==', 'pending').orderBy('timestamp', 'asc').onSnapshot(snap => {
+                list.innerHTML = '';
+                if(snap.empty) list.innerHTML = '<p class="text-center text-gray-400">No pending requests</p>';
+                snap.forEach(doc => {
+                    const t = doc.data();
+                    const isDep = t.type === 'deposit';
+                    const details = isDep 
+                        ? `Amt: ${t.amount} Tk | Trx: ${t.trx} | Sender: ${t.sender}` 
+                        : `Pts: ${t.points} | To: ${t.account} (${t.method})`;
+
+                    list.innerHTML += `
+                    <div class="bg-white p-4 rounded shadow border-l-4 ${isDep?'border-indigo-500':'border-orange-500'} relative">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="font-bold uppercase text-xs ${isDep?'text-indigo-600':'text-orange-600'}">${t.type}</span>
+                                <div class="text-sm font-bold text-gray-700 mt-1">${details}</div>
+                                <div class="text-xs text-gray-400">UID: ${t.userId}</div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <button onclick="processTransaction('${doc.id}', '${t.type}', ${isDep?t.amount:t.points}, '${t.userId}', true, this)" class="bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700">Approve</button>
+                                <button onclick="processTransaction('${doc.id}', '${t.type}', ${isDep?t.amount:t.points}, '${t.userId}', false, this)" class="bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700">Reject</button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            });
+        }
+
+        // 3.1 Admin Finance (HISTORY LIST)
+        async function loadAdminHistory() {
+            const list = document.getElementById('adminHistoryList');
+            list.innerHTML = '<tr><td colspan="3" class="text-center p-2">Loading...</td></tr>';
+            // Get last 20 non-pending transactions
+            const snap = await db.collection('transactions').where('status', 'in', ['approved', 'rejected']).orderBy('timestamp', 'desc').limit(20).get();
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const t = doc.data();
+                const color = t.status === 'approved' ? 'text-green-600' : 'text-red-600';
+                list.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2 text-xs font-bold uppercase">${t.type}</td>
+                        <td class="p-2 text-xs">
+                            ${t.amount ? t.amount + ' Tk' : t.points + ' Pts'}
+                            <br><span class="text-gray-400 text-[10px]">${t.trx || t.account}</span>
+                        </td>
+                        <td class="p-2 text-xs font-bold uppercase ${color}">${t.status}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Toggle Views
+        function toggleFinanceView(view) {
+            document.getElementById('fin-pending-view').classList.toggle('hidden', view !== 'pending');
+            document.getElementById('fin-history-view').classList.toggle('hidden', view !== 'history');
+            
+            document.getElementById('btn-fin-pending').className = view === 'pending' ? "px-4 py-1 rounded bg-indigo-600 text-white text-sm font-bold" : "px-4 py-1 rounded bg-gray-200 text-gray-700 text-sm font-bold";
+            document.getElementById('btn-fin-history').className = view === 'history' ? "px-4 py-1 rounded bg-indigo-600 text-white text-sm font-bold" : "px-4 py-1 rounded bg-gray-200 text-gray-700 text-sm font-bold";
+            
+            if(view === 'history') loadAdminHistory();
+        }
+
+        // 3.2 Process Transaction (With Security Check)
+        async function processTransaction(docId, type, amount, uid, isApprove, btnElement) {
+            // Disable button immediately to prevent double clicks
+            if(btnElement) btnElement.disabled = true;
+
+            try {
+                // Double Check: Is the transaction still pending?
+                const docRef = db.collection('transactions').doc(docId);
+                const docSnap = await docRef.get();
+                
+                if (!docSnap.exists) {
+                    Swal.fire('Error', 'Transaction not found', 'error');
+                    return;
+                }
+                
+                if (docSnap.data().status !== 'pending') {
+                    Swal.fire('Warning', 'This request has already been processed!', 'warning');
+                    return; // Stop here if already approved/rejected
+                }
+
+                if (isApprove) {
+                    // Approve Logic
+                    if (type === 'deposit') {
+                        // Rate: 1 Taka = 100 Points
+                        const pointsToAdd = amount * 100;
+                        await db.collection('users').doc(uid).update({ points: firebase.firestore.FieldValue.increment(pointsToAdd) });
+                    }
+                    // Update status to APPROVED
+                    await docRef.update({ status: 'approved' });
+                    Swal.fire({ icon: 'success', title: 'Approved', timer: 1500, showConfirmButton: false });
+                } else {
+                    // Reject Logic
+                    if (type === 'withdraw') {
+                        // Refund points if reject withdraw
+                        await db.collection('users').doc(uid).update({ points: firebase.firestore.FieldValue.increment(amount) });
+                    }
+                    // Update status to REJECTED
+                    await docRef.update({ status: 'rejected' });
+                    Swal.fire({ icon: 'error', title: 'Rejected', timer: 1500, showConfirmButton: false });
+                }
+            } catch(e) { 
+                Swal.fire('Error', e.message, 'error'); 
+                if(btnElement) btnElement.disabled = false; // Re-enable on error
+            }
+        }
+
+        // 4. Admin Settings
+        async function saveAdminSettings() {
+            const bkash = document.getElementById('setBkash').value;
+            const minWith = parseInt(document.getElementById('setMinWith').value);
+            const notice = document.getElementById('setNotice').value;
+            
+            await db.collection('settings').doc('general').set({ bkash, minWithdraw: minWith, notice });
+            globalSettings = { bkash, minWithdraw: minWith, notice };
+            Swal.fire('Saved', 'Global settings updated', 'success');
+        }
+
+        // 5. Admin Notification
+        async function sendAdminNotification() {
+            const target = document.getElementById('admNotifTarget').value;
+            const msg = document.getElementById('admNotifMsg').value;
+            await db.collection('notifications').add({ target, message: msg, timestamp: Date.now() });
+            Swal.fire('Sent', '', 'success');
+        }
+        
+        // Load Admin Dashboard Default
+        function loadAdminDashboard() {
+            switchAdminTab('home');
+        }
+
+    </script>
+</body>
+</html>
