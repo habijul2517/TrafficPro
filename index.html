@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrafficPro - Earn & Promote</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .gradient-bg { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); }
+        
+        /* Drawer Transition */
+        #mobile-drawer { transition: transform 0.3s ease-in-out; }
+        .drawer-closed { transform: translateX(-100%); }
+        .drawer-open { transform: translateX(0); }
+        @media (min-width: 768px) { #mobile-drawer { transform: translateX(0) !important; } }
+
+        /* Notification Badge Animation */
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .animate-pulse-red { animation: pulse-red 2s infinite; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen overflow-hidden flex flex-col">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[70] flex items-center justify-center bg-white hidden">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-indigo-600"></div>
+    </div>
+
+    <!-- 1. AUTH SECTION (LOGIN / REGISTER) -->
+    <div id="auth-section" class="flex-grow flex items-center justify-center gradient-bg p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full glass-effect my-auto">
+            <div class="text-center mb-6">
+                <div class="h-16 w-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">TrafficPro</h2>
+                <p class="text-gray-500 text-sm mt-2">আয় এবং ট্রাফিক বৃদ্ধির সেরা প্ল্যাটফর্ম</p>
+            </div>
+
+            <!-- Toggle Buttons -->
+            <div class="flex bg-gray-100 rounded-lg p-1 mb-6">
+                <button onclick="toggleAuthMode('login')" id="btn-login-mode" class="flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition">লগিন</button>
+                <button onclick="toggleAuthMode('register')" id="btn-register-mode" class="flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition">রেজিস্টার</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইমেইল (Email)</label>
+                    <input type="email" id="loginEmail" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="example@mail.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="loginPass" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="********">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    প্রবেশ করুন
+                </button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইউজারনেম (Username)</label>
+                    <input type="text" id="regUsername" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="unique name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ইমেইল (Email)</label>
+                    <input type="email" id="regEmail" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="example@mail.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="regPass" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Min 6 chars">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">রেফার কোড (Optional)</label>
+                    <input type="text" id="regRefCode" class="block w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Referral Code">
+                </div>
+                <button onclick="handleRegister()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    একাউন্ট খুলুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP SECTION -->
+    <div id="app-section" class="hidden flex h-screen relative">
+        
+        <!-- Mobile Drawer Overlay -->
+        <div id="drawer-overlay" onclick="toggleDrawer()" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+        <!-- SIDEBAR -->
+        <aside id="mobile-drawer" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl drawer-closed md:relative md:flex flex-col h-full">
+            <div class="p-6 flex justify-between items-center border-b bg-indigo-600 text-white">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-bolt text-xl"></i>
+                    <span class="text-xl font-bold">TrafficPro</span>
+                </div>
+                <button onclick="toggleDrawer()" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a onclick="navigate('dashboard')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition bg-indigo-50 font-bold">
+                    <i class="fas fa-home w-6 text-indigo-500"></i> <span>ড্যাশবোর্ড</span>
+                </a>
+                <a onclick="navigate('wallet')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-wallet w-6 text-green-500"></i> <span>ওয়ালেট</span>
+                </a>
+                <a onclick="navigate('earn')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-coins w-6 text-yellow-500"></i> <span>আয় করুন</span>
+                </a>
+                <a onclick="navigate('leaderboard')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-trophy w-6 text-orange-500"></i> <span>লিডারবোর্ড</span>
+                </a>
+                <a onclick="navigate('campaign')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-bullhorn w-6 text-purple-500"></i> <span>ক্যাম্পেইন</span>
+                </a>
+                <a onclick="navigate('referral')" class="nav-item flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-indigo-50 cursor-pointer transition">
+                    <i class="fas fa-users w-6 text-blue-500"></i> <span>রেফারেল</span>
+                </a>
+                
+                <a href="https://t.me/azbot25" target="_blank" class="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
+                    <i class="fab fa-telegram w-6 text-blue-500"></i> <span>সাপোর্ট গ্রুপ</span>
+                </a>
+
+                <a id="admin-link" onclick="navigate('admin')" class="hidden flex items-center space-x-3 text-red-700 p-3 rounded-lg hover:bg-red-50 cursor-pointer transition">
+                    <i class="fas fa-user-shield w-6 text-red-500"></i> <span>এডমিন প্যানেল</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t bg-gray-50">
+                <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-100 p-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt"></i> <span>লগআউট</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden w-full">
+            <!-- Header -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center z-30">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleDrawer()" class="md:hidden text-gray-700 focus:outline-none p-2 rounded hover:bg-gray-100">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold text-gray-800" id="page-title">ড্যাশবোর্ড</h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <!-- Notification Bell -->
+                    <div class="relative cursor-pointer" onclick="toggleNotifications()">
+                        <i class="fas fa-bell text-xl text-gray-600 hover:text-indigo-600 transition"></i>
+                        <span id="notif-badge" class="hidden absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse-red"></span>
+                        
+                        <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                            <div class="bg-indigo-600 text-white p-3 font-bold text-sm flex justify-between">
+                                <span>নোটিফিকেশন</span>
+                                <button onclick="markAllRead()" class="text-xs underline opacity-80">সব ডিলিট</button>
+                            </div>
+                            <div id="notif-list" class="max-h-64 overflow-y-auto">
+                                <p class="p-4 text-center text-xs text-gray-400">কোনো নোটিফিকেশন নেই</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Points Badge -->
+                    <div class="bg-indigo-100 text-indigo-800 px-4 py-1.5 rounded-full font-bold text-sm flex items-center shadow-sm">
+                        <i class="fas fa-coins mr-2 text-yellow-600"></i> <span id="displayPoints">0</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 relative">
+                
+                <!-- VIEW: DASHBOARD -->
+                <div id="view-dashboard" class="view-section space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                            <div class="absolute right-0 top-0 opacity-20 transform translate-x-2 -translate-y-2">
+                                <i class="fas fa-wallet text-8xl"></i>
+                            </div>
+                            <p class="opacity-80">বর্তমান ব্যালেন্স</p>
+                            <h3 class="text-3xl font-bold mt-1"><span id="dashPoints">0</span> Pts</h3>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-green-500 relative">
+                            <p class="text-gray-500 font-bold">ডেইলি চেক-ইন</p>
+                            <div class="text-xs text-orange-500 font-bold mt-1 mb-2">
+                                Streak: <span id="dashStreak">0</span> Days
+                            </div>
+                            <button onclick="claimBonus()" class="w-full bg-green-50 text-green-700 py-2 rounded-lg font-bold hover:bg-green-100 transition flex justify-center items-center gap-2">
+                                <i class="fas fa-calendar-check"></i> বোনাস নিন
+                            </button>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-blue-400">
+                            <p class="text-gray-500 font-bold">হেল্প এবং সাপোর্ট</p>
+                            <div class="mt-3">
+                                <a href="https://t.me/your_group_link" target="_blank" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-600 transition flex justify-center items-center gap-2 text-sm shadow">
+                                    <i class="fab fa-telegram-plane"></i> টেলিগ্রাম গ্রুপে জয়েন করুন
+                                </a>
+                                <p class="text-xs text-center text-gray-400 mt-2">যেকোনো সমস্যা জানাতে গ্রুপে মেসেজ দিন</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: LEADERBOARD -->
+                <div id="view-leaderboard" class="view-section hidden">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+                        <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4 text-white flex justify-between items-center">
+                            <h3 class="text-lg font-bold"><i class="fas fa-crown mr-2"></i> সেরা ১০ পারফর্মার</h3>
+                            <button onclick="loadLeaderboard()" class="text-sm bg-white/20 px-2 py-1 rounded"><i class="fas fa-sync"></i></button>
+                        </div>
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
+                                <tr>
+                                    <th class="p-4">Rank</th>
+                                    <th class="p-4">User</th>
+                                    <th class="p-4 text-right">Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardList" class="divide-y text-sm">
+                                <tr><td colspan="3" class="p-4 text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: WALLET -->
+                <div id="view-wallet" class="view-section hidden max-w-4xl mx-auto">
+                    <div class="flex bg-white rounded-xl shadow p-1 mb-6">
+                        <button onclick="switchWalletTab('deposit')" id="tab-deposit" class="flex-1 py-2 rounded-lg font-bold text-indigo-600 bg-indigo-50 transition">Deposit (টাকা জমা)</button>
+                        <button onclick="switchWalletTab('withdraw')" id="tab-withdraw" class="flex-1 py-2 rounded-lg font-bold text-gray-500 hover:text-indigo-600 transition">Withdraw (টাকা তোলা)</button>
+                    </div>
+
+                    <!-- Deposit Form -->
+                    <div id="deposit-form" class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold mb-4 text-indigo-600 border-b pb-2">ডিপোজিট করুন</h3>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm text-yellow-700 mb-4">
+                            <p><b>রেট:</b> ১ টাকা = ১০০ পয়েন্ট। নিচে দেওয়া নাম্বারে সেন্ড মানি করে ফর্ম পূরণ করুন।</p>
+                            <p class="mt-1">বিকাশ/নগদ (Personal): <b>01880527986</b></p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">পেমেন্ট মেথড</label>
+                                <select id="depMethod" class="w-full border p-2 rounded mt-1">
+                                    <option value="bkash">Bkash</option>
+                                    <option value="nagad">Nagad</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">টাকার পরিমাণ (BDT)</label>
+                                <input type="number" id="depAmount" class="w-full border p-2 rounded mt-1" placeholder="Ex: 50">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">যেই নাম্বার থেকে টাকা পাঠিয়েছেন</label>
+                                <input type="text" id="depSender" class="w-full border p-2 rounded mt-1" placeholder="01xxxxxxxxx">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">TrxID (Transaction ID)</label>
+                                <input type="text" id="depTrx" class="w-full border p-2 rounded mt-1" placeholder="Ex: 8JHK2...">
+                            </div>
+                        </div>
+                        <button onclick="submitDeposit()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700">রিকুয়েস্ট পাঠান</button>
+                    </div>
+
+                    <!-- Withdraw Form -->
+                    <div id="withdraw-form" class="bg-white rounded-xl shadow-md p-6 hidden">
+                        <h3 class="text-lg font-bold mb-4 text-green-600 border-b pb-2">উইথড্র করুন</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">পেমেন্ট মেথড</label>
+                                <select id="withMethod" class="w-full border p-2 rounded mt-1">
+                                    <option value="bkash">Bkash</option>
+                                    <option value="nagad">Nagad</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">পয়েন্ট পরিমাণ</label>
+                                <input type="number" id="withPoints" class="w-full border p-2 rounded mt-1" placeholder="Min: 5000">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">আপনার একাউন্ট নাম্বার (যেখানে টাকা নিবেন)</label>
+                            <input type="text" id="withAccount" class="w-full border p-2 rounded mt-1" placeholder="017xxxxxxxx">
+                        </div>
+                        <button onclick="submitWithdraw()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700">উইথড্র রিকুয়েস্ট</button>
+                    </div>
+
+                    <!-- Transaction History -->
+                    <div class="mt-8">
+                        <h3 class="text-md font-bold text-gray-600 mb-3">লেনদেন ইতিহাস</h3>
+                        <div class="bg-white rounded-xl shadow overflow-hidden">
+                            <table class="min-w-full text-sm text-left">
+                                <thead class="bg-gray-100 text-gray-600">
+                                    <tr>
+                                        <th class="p-3">Type</th>
+                                        <th class="p-3">Amount/Pts</th>
+                                        <th class="p-3">Details</th>
+                                        <th class="p-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="trxHistory" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: EARN (Timer Logic) -->
+                <div id="view-earn" class="view-section hidden">
+                    <button onclick="loadTasks()" class="mb-4 text-indigo-600 float-right hover:bg-indigo-50 px-3 py-1 rounded"><i class="fas fa-sync"></i> রিফ্রেশ</button>
+                    <h3 class="text-lg font-bold mb-4">অ্যাক্টিভ টাস্ক</h3>
+                    <div class="bg-blue-50 p-3 rounded mb-4 text-sm text-blue-800 border-l-4 border-blue-500">
+                        <i class="fas fa-info-circle"></i> নিয়ম: লিঙ্কে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন। প্রতিটি লিঙ্ক ২৪ ঘণ্টায় একবারই দেখা যাবে।
+                    </div>
+                    <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-4 clear-both"></div>
+                </div>
+
+                <!-- VIEW: CAMPAIGN (UPDATED) -->
+                <div id="view-campaign" class="view-section hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                        
+                        <!-- Create Campaign Form -->
+                        <div class="bg-white rounded-xl shadow-lg p-6 h-fit">
+                            <h3 class="text-xl font-bold mb-4 text-indigo-700 border-b pb-2">নতুন ক্যাম্পেইন তৈরি করুন</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">ক্যাম্পেইন টাইপ (খরচ প্রতি ভিউ)</label>
+                                    <select id="campType" onchange="calculateCampaignCost()" class="w-full border rounded p-3 bg-gray-50 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                        <option value="direct">Direct Link (50 Pts/View - 30s)</option>
+                                        <option value="website">Website Visit (100 Pts/View - 60s)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">লিঙ্ক (URL)</label>
+                                    <input type="url" id="campUrl" placeholder="https://your-site.com" class="w-full border rounded p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">কতগুলো ভিউ চান? (Limit)</label>
+                                    <input type="number" id="campLimit" oninput="calculateCampaignCost()" placeholder="Ex: 100" class="w-full border rounded p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+
+                                <!-- Cost Display -->
+                                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                                    <div class="flex justify-between items-center text-sm mb-1">
+                                        <span class="text-gray-600">প্রতি ভিউ খরচ:</span>
+                                        <span class="font-bold text-gray-800" id="displayCostPerView">50 Pts</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-lg font-bold text-indigo-700 border-t border-indigo-200 pt-2 mt-2">
+                                        <span>মোট খরচ:</span>
+                                        <span><span id="displayTotalCost">0</span> Pts</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="createCampaign()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition shadow-lg transform active:scale-95">
+                                    ক্যাম্পেইন চালু করুন
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Campaign History -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <h3 class="text-xl font-bold text-gray-700">আমার ক্যাম্পেইন</h3>
+                                <button onclick="loadMyCampaigns()" class="text-sm text-indigo-600 hover:underline"><i class="fas fa-sync"></i> রিফ্রেশ</button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="bg-gray-100 text-gray-600">
+                                        <tr>
+                                            <th class="p-3 rounded-l">Type</th>
+                                            <th class="p-3">Views/Limit</th>
+                                            <th class="p-3 rounded-r text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="myCampaignList" class="divide-y">
+                                        <tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: REFERRAL -->
+                <div id="view-referral" class="view-section hidden">
+                    <div class="bg-white rounded-xl shadow p-8 text-center max-w-lg mx-auto">
+                        <i class="fas fa-gift text-5xl text-purple-500 mb-4 animate-bounce"></i>
+                        <h3 class="text-2xl font-bold">ইনভাইট করুন</h3>
+                        <p class="text-gray-500 mb-6 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান ১০০ পয়েন্ট!</p>
+                        <div class="bg-gray-100 p-4 rounded flex justify-between items-center border border-dashed border-gray-400">
+                            <span id="myRefCode" class="font-mono font-bold text-lg text-indigo-700">...</span>
+                            <button onclick="copyRefCode()" class="text-indigo-600 font-bold hover:bg-indigo-100 px-3 py-1 rounded">COPY</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- VIEW: ADMIN -->
+                <div id="view-admin" class="view-section hidden">
+                    <div class="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto border-t-4 border-red-500">
+                        <h3 class="text-xl font-bold mb-4 text-red-600">Admin Notification Sender</h3>
+                        <div>
+                            <label class="block text-sm font-bold mb-1">Target User ID (or 'all')</label>
+                            <input type="text" id="adminNotifTarget" value="all" class="w-full border p-2 rounded mb-3">
+                            <label class="block text-sm font-bold mb-1">Message</label>
+                            <textarea id="adminNotifMsg" class="w-full border p-2 rounded mb-3" rows="3"></textarea>
+                            <button onclick="sendAdminNotification()" class="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700">Send Notification</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- FIREBASE SDK (Compat v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- 1. CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpkwRH32c7RaFU7IZJznATjMQPmbaJjb0", 
+            authDomain: "diamond-t-a023f.firebaseapp.com",
+            projectId: "diamond-t-a023f",
+            storageBucket: "diamond-t-a023f.appspot.com",
+            messagingSenderId: "123433072712",
+            appId: "1:123433072712:web:c21c8ff8ef55b89f35407d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        let currentUser = null;
+        let unsubscribeNotifs = null;
+
+        // --- 2. INITIALIZATION ---
+        window.onload = () => {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        currentUser = { uid: user.uid, ...userDoc.data() };
+                        loadApp();
+                    } else {
+                        auth.signOut();
+                    }
+                } else {
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('auth-section').classList.remove('hidden');
+                    document.getElementById('app-section').classList.add('hidden');
+                }
+            });
+        };
+
+        // --- 3. AUTH LOGIC ---
+        function toggleAuthMode(mode) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const btnLogin = document.getElementById('btn-login-mode');
+            const btnReg = document.getElementById('btn-register-mode');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                btnLogin.className = "flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition";
+                btnReg.className = "flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition";
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                btnReg.className = "flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition";
+                btnLogin.className = "flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition";
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            if(!email || !pass) return Swal.fire('Error', 'সব তথ্য দিন', 'error');
+
+            document.getElementById('loader').classList.remove('hidden');
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+            } catch (error) {
+                document.getElementById('loader').classList.add('hidden');
+                Swal.fire('Error', error.message, 'error');
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const refCode = document.getElementById('regRefCode').value.trim();
+
+            if(username.length < 4) return Swal.fire('Error', 'ইউজারনেম কমপক্ষে ৪ অক্ষরের হতে হবে', 'warning');
+            if(pass.length < 6) return Swal.fire('Error', 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 'warning');
+
+            document.getElementById('loader').classList.remove('hidden');
+            try {
+                const userCheck = await db.collection('users').where('username', '==', username).get();
+                if(!userCheck.empty) throw new Error("Username already taken!");
+
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                const uid = cred.user.uid;
+
+                if (refCode) {
+                    const refQuery = await db.collection('users').where('username', '==', refCode).get();
+                    if(!refQuery.empty) {
+                        const refDoc = refQuery.docs[0];
+                        await db.collection('users').doc(refDoc.id).update({
+                            points: firebase.firestore.FieldValue.increment(100),
+                            totalReferrals: firebase.firestore.FieldValue.increment(1)
+                        });
+                    }
+                }
+
+                await db.collection('users').doc(uid).set({
+                    username, email, points: 50, createdAt: Date.now(), totalReferrals: 0,
+                    checkInStreak: 0, lastCheckInDate: '', role: 'user'
+                });
+            } catch (error) {
+                document.getElementById('loader').classList.add('hidden');
+                Swal.fire('Error', error.message, 'error');
+            }
+        }
+
+        function logout() {
+            if(unsubscribeNotifs) unsubscribeNotifs();
+            auth.signOut();
+            location.reload();
+        }
+
+        // --- 4. APP NAVIGATION & UI ---
+        function loadApp() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('app-section').classList.remove('hidden');
+            document.getElementById('loader').classList.add('hidden');
+            updateUserDisplay();
+            
+            db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
+                const data = doc.data();
+                currentUser.points = data.points;
+                currentUser.checkInStreak = data.checkInStreak || 0;
+                currentUser.lastCheckInDate = data.lastCheckInDate || "";
+                currentUser.role = data.role || 'user';
+                updateUserDisplay();
+            });
+
+            if(currentUser.role === 'admin' || currentUser.username === 'admin') {
+                document.getElementById('admin-link').classList.remove('hidden');
+            }
+
+            listenToNotifications();
+            navigate('dashboard');
+        }
+
+        function updateUserDisplay() {
+            document.getElementById('displayPoints').innerText = currentUser.points;
+            document.getElementById('dashPoints').innerText = currentUser.points;
+            document.getElementById('dashStreak').innerText = currentUser.checkInStreak || 0;
+            document.getElementById('myRefCode').innerText = currentUser.username;
+        }
+
+        function navigate(view) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('bg-indigo-50', 'font-bold'));
+
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            const navLink = document.querySelector(`a[onclick="navigate('${view}')"]`);
+            if(navLink) navLink.classList.add('bg-indigo-50', 'font-bold');
+
+            if (window.innerWidth < 768) toggleDrawer(true);
+
+            const titles = { 'dashboard': 'ড্যাশবোর্ড', 'wallet': 'ওয়ালেট', 'earn': 'পয়েন্ট আয়', 'campaign': 'ক্যাম্পেইন', 'referral': 'রেফারেল', 'leaderboard': 'লিডারবোর্ড', 'admin': 'Admin Panel' };
+            document.getElementById('page-title').innerText = titles[view] || 'TrafficPro';
+
+            if(view === 'earn') loadTasks();
+            if(view === 'wallet') loadTransactions();
+            if(view === 'leaderboard') loadLeaderboard();
+            if(view === 'campaign') loadMyCampaigns(); // Load History
+        }
+
+        function toggleDrawer(forceClose = false) {
+            const drawer = document.getElementById('mobile-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            if (forceClose) {
+                drawer.classList.remove('drawer-open');
+                drawer.classList.add('drawer-closed');
+                overlay.classList.add('hidden');
+            } else {
+                const isOpen = drawer.classList.contains('drawer-open');
+                drawer.classList.toggle('drawer-open', !isOpen);
+                drawer.classList.toggle('drawer-closed', isOpen);
+                overlay.classList.toggle('hidden', isOpen);
+            }
+        }
+
+        // --- 5. STREAK LOGIC ---
+        async function claimBonus() {
+            const today = new Date().toISOString().split('T')[0];
+            const lastDate = currentUser.lastCheckInDate;
+            let streak = currentUser.checkInStreak || 0;
+
+            if (lastDate === today) {
+                return Swal.fire('Wait', 'আজকের বোনাস আপনি ইতিমধ্যে নিয়ে ফেলেছেন!', 'info');
+            }
+
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            if (lastDate === yesterdayStr) {
+                streak++;
+            } else {
+                streak = 1;
+            }
+
+            const rewardCalculationStreak = streak > 7 ? 7 : streak;
+            const points = 20 + ((rewardCalculationStreak - 1) * 5); 
+
+            try {
+                await db.collection('users').doc(currentUser.uid).update({
+                    points: firebase.firestore.FieldValue.increment(points),
+                    lastCheckInDate: today,
+                    checkInStreak: streak
+                });
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: `Day ${streak} Bonus!`,
+                    text: `আপনি পেয়েছেন ${points} পয়েন্ট! নিয়মিত আসুন।`
+                });
+            } catch (e) {
+                Swal.fire('Error', e.message, 'error');
+            }
+        }
+
+        // --- 6. TASK LOGIC (UPDATED WITH 24H RESTRICTION) ---
+        async function loadTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '<div class="col-span-2 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>';
+            
+            try {
+                // 1. Get recent campaigns
+                const snap = await db.collection('campaigns').orderBy('createdAt', 'desc').limit(30).get();
+                
+                // 2. Get User's completed task history
+                const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
+                const completedMap = {};
+                completedSnap.forEach(doc => {
+                    completedMap[doc.id] = doc.data().timestamp; // Store timestamp
+                });
+
+                list.innerHTML = '';
+                let hasTasks = false;
+
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    
+                    // Logic: Limit Reached?
+                    const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
+
+                    // Logic: 24 Hour CoolDown Check
+                    const lastRunTime = completedMap[doc.id] || 0;
+                    const currentTime = Date.now();
+                    const oneDayMs = 24 * 60 * 60 * 1000;
+                    const isCoolingDown = (currentTime - lastRunTime) < oneDayMs;
+
+                    // Only show if: Not owner, Not limit reached, Not in 24h cooldown
+                    if(data.owner !== currentUser.uid && !isLimitReached && !isCoolingDown) {
+                        hasTasks = true;
+                        const isWebsite = data.type === 'website';
+                        const reward = isWebsite ? 100 : 50;
+                        const waitTime = isWebsite ? '৬০ সেকেন্ড' : '৩০ সেকেন্ড';
+                        const waitSeconds = isWebsite ? 60 : 30;
+                        const icon = isWebsite ? 'fa-globe' : 'fa-link';
+
+                        list.innerHTML += `
+                            <div class="bg-white p-5 rounded-xl shadow-md border hover:shadow-lg transition relative overflow-hidden group">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center">
+                                            <i class="fas ${icon}"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-800">${isWebsite ? 'Website Visit' : 'Link Click'}</h4>
+                                            <p class="text-xs text-gray-500">অপেক্ষা: ${waitTime}</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-bold">+${reward}</span>
+                                </div>
+                                
+                                <button onclick="startTask('${doc.id}', '${data.url}', ${reward}, ${waitSeconds})" 
+                                    class="w-full bg-indigo-600 text-white py-2 rounded-lg font-bold hover:bg-indigo-700 transition active:scale-95">
+                                    কাজ শুরু করুন
+                                </button>
+                            </div>
+                        `;
+                    }
+                });
+                
+                if(!hasTasks) list.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-10">বর্তমানে কোনো কাজ নেই বা সব কাজ শেষ। ২৪ ঘণ্টা পর আবার চেক করুন।</p>';
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = '<p class="col-span-2 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>';
+            }
+        }
+
+        function startTask(taskId, url, points, seconds) {
+            window.open(url, '_blank');
+            let timeLeft = seconds;
+            
+            Swal.fire({
+                title: 'যাচাই করা হচ্ছে...',
+                html: `
+                    <div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেন না।</div>
+                    <div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div>
+                    <div class="text-sm text-gray-500">সেকেন্ড বাকি</div>
+                `,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    const timerDisplay = document.getElementById('timerCount');
+                    const interval = setInterval(async () => {
+                        timeLeft--;
+                        if(timerDisplay) timerDisplay.innerText = timeLeft;
+
+                        if (timeLeft <= 0) {
+                            clearInterval(interval);
+                            try {
+                                // 1. Add points to user
+                                await db.collection('users').doc(currentUser.uid).update({ 
+                                    points: firebase.firestore.FieldValue.increment(points) 
+                                });
+                                // 2. Increment clicks on campaign
+                                await db.collection('campaigns').doc(taskId).update({
+                                    clicks: firebase.firestore.FieldValue.increment(1)
+                                });
+                                // 3. Record completion time for 24h restriction
+                                await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(taskId).set({
+                                    timestamp: Date.now()
+                                });
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'অভিনন্দন!',
+                                    text: `${points} পয়েন্ট যোগ হয়েছে।`,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                                loadTasks(); // Reload tasks to hide the completed one
+                            } catch (error) {
+                                Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error');
+                            }
+                        }
+                    }, 1000);
+                }
+            });
+        }
+
+        // --- 7. NEW CAMPAIGN LOGIC (UPDATED) ---
+        function calculateCampaignCost() {
+            const type = document.getElementById('campType').value;
+            const limit = parseInt(document.getElementById('campLimit').value) || 0;
+            const costPerView = type === 'website' ? 100 : 50;
+            const totalCost = limit * costPerView;
+
+            document.getElementById('displayCostPerView').innerText = costPerView + " Pts";
+            document.getElementById('displayTotalCost').innerText = totalCost;
+            return totalCost;
+        }
+
+        async function createCampaign() {
+            const type = document.getElementById('campType').value;
+            const url = document.getElementById('campUrl').value;
+            const limit = parseInt(document.getElementById('campLimit').value);
+            const totalCost = calculateCampaignCost();
+
+            if(!limit || limit < 1) return Swal.fire('Error', 'কমপক্ষে ১টি ভিউ সিলেক্ট করুন', 'warning');
+            if(currentUser.points < totalCost) return Swal.fire('Error', `আপনার পর্যাপ্ত পয়েন্ট নেই। প্রয়োজন: ${totalCost}`, 'warning');
+            if(!url || !url.startsWith('http')) return Swal.fire('Error', 'সঠিক URL দিন (https://...)', 'error');
+
+            try {
+                // Deduct total cost
+                await db.collection('users').doc(currentUser.uid).update({ 
+                    points: firebase.firestore.FieldValue.increment(-totalCost) 
+                });
+
+                // Create Campaign with Limit
+                await db.collection('campaigns').add({ 
+                    owner: currentUser.uid, 
+                    type, 
+                    url, 
+                    limit, // Target Views
+                    clicks: 0, // Current Views
+                    active: true,
+                    createdAt: Date.now() 
+                });
+
+                Swal.fire('Success', 'ক্যাম্পেইন চালু হয়েছে!', 'success');
+                document.getElementById('campUrl').value = '';
+                document.getElementById('campLimit').value = '';
+                calculateCampaignCost(); // Reset display
+                loadMyCampaigns(); // Refresh list
+            } catch(e) {
+                Swal.fire('Error', e.message, 'error');
+            }
+        }
+
+        function loadMyCampaigns() {
+            const tbody = document.getElementById('myCampaignList');
+            db.collection('campaigns')
+                .where('owner', '==', currentUser.uid)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snap => {
+                    tbody.innerHTML = '';
+                    if(snap.empty) {
+                        tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">কোনো ক্যাম্পেইন নেই</td></tr>';
+                    } else {
+                        snap.forEach(doc => {
+                            const d = doc.data();
+                            const clicks = d.clicks || 0;
+                            const limit = d.limit || 0;
+                            const progress = Math.min((clicks / limit) * 100, 100);
+                            const isFinished = clicks >= limit;
+
+                            tbody.innerHTML += `
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">
+                                        <div class="font-bold text-gray-700 capitalize">${d.type}</div>
+                                        <div class="text-xs text-gray-400 truncate w-32"><a href="${d.url}" target="_blank">${d.url}</a></div>
+                                    </td>
+                                    <td class="p-3">
+                                        <div class="text-sm font-bold">${clicks} / ${limit}</div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                            <div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${progress}%"></div>
+                                        </div>
+                                    </td>
+                                    <td class="p-3 text-right">
+                                        ${isFinished 
+                                            ? '<span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">Finished</span>' 
+                                            : '<span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded font-bold">Active</span>'}
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+        }
+
+        // --- 8. UTILS & WALLET LOGIC ---
+        function copyRefCode() {
+            navigator.clipboard.writeText(currentUser.username);
+            Swal.fire('Copied', 'Code Copied!', 'success');
+        }
+
+        function switchWalletTab(tab) {
+            document.getElementById('deposit-form').classList.toggle('hidden', tab !== 'deposit');
+            document.getElementById('withdraw-form').classList.toggle('hidden', tab !== 'withdraw');
+            document.getElementById('tab-deposit').className = tab === 'deposit' ? "flex-1 py-2 rounded-lg font-bold text-indigo-600 bg-indigo-50 transition" : "flex-1 py-2 rounded-lg font-bold text-gray-500 hover:text-indigo-600 transition";
+            document.getElementById('tab-withdraw').className = tab === 'withdraw' ? "flex-1 py-2 rounded-lg font-bold text-green-600 bg-green-50 transition" : "flex-1 py-2 rounded-lg font-bold text-gray-500 hover:text-indigo-600 transition";
+        }
+
+        async function submitDeposit() {
+            const method = document.getElementById('depMethod').value;
+            const amount = parseFloat(document.getElementById('depAmount').value);
+            const trx = document.getElementById('depTrx').value.trim();
+            const sender = document.getElementById('depSender').value.trim();
+
+            if(!amount || !trx || !sender) return Swal.fire('Error', 'সব তথ্য দিন (টাকা, নাম্বার, TrxID)', 'error');
+
+            await db.collection('transactions').add({ 
+                userId: currentUser.uid, 
+                type: 'deposit', 
+                method, 
+                amount, 
+                trxId: trx, 
+                senderNumber: sender,
+                status: 'pending', 
+                timestamp: Date.now() 
+            });
+            Swal.fire('Submitted', 'রিকুয়েস্ট পেন্ডিং আছে।', 'success');
+            loadTransactions();
+        }
+
+        async function submitWithdraw() {
+            const method = document.getElementById('withMethod').value;
+            const points = parseInt(document.getElementById('withPoints').value);
+            const account = document.getElementById('withAccount').value.trim();
+            
+            if(points < 5000) return Swal.fire('Limit', 'মিনিমাম ৫০০০ পয়েন্ট', 'warning');
+            if(currentUser.points < points) return Swal.fire('Error', 'পর্যাপ্ত পয়েন্ট নেই', 'error');
+
+            await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-points) });
+            await db.collection('transactions').add({ 
+                userId: currentUser.uid, 
+                type: 'withdraw', 
+                method, 
+                points, 
+                account, 
+                status: 'pending', 
+                timestamp: Date.now() 
+            });
+            Swal.fire('Success', 'উইথড্র রিকুয়েস্ট সাবমিট হয়েছে', 'success');
+            loadTransactions();
+        }
+
+        function loadTransactions() {
+            const tbody = document.getElementById('trxHistory');
+            db.collection('transactions').where('userId', '==', currentUser.uid).orderBy('timestamp', 'desc').limit(10)
+                .onSnapshot(snapshot => {
+                    tbody.innerHTML = '';
+                    if(snapshot.empty) tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-gray-400">No records</td></tr>';
+                    
+                    snapshot.forEach(doc => {
+                        const d = doc.data();
+                        const color = d.status === 'pending' ? 'text-yellow-600' : (d.status === 'approved' ? 'text-green-600' : 'text-red-600');
+                        const statusIcon = d.status === 'pending' ? '<i class="far fa-clock"></i>' : (d.status === 'approved' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>');
+                        
+                        let detailsHtml = '';
+                        if (d.type === 'deposit') {
+                            detailsHtml = `
+                                <div class="text-xs">
+                                    <span class="font-bold text-gray-700">From:</span> ${d.senderNumber || 'N/A'}
+                                    <br><span class="text-gray-400">Trx: ${d.trxId}</span>
+                                </div>`;
+                        } else {
+                            detailsHtml = `
+                                <div class="text-xs">
+                                    <span class="font-bold text-gray-700">To:</span> ${d.account}
+                                </div>`;
+                        }
+
+                        tbody.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3 capitalize font-bold text-gray-600">${d.type}</td>
+                                <td class="p-3 font-mono">${d.amount ? '৳'+d.amount : d.points+' Pts'}</td>
+                                <td class="p-3">${detailsHtml}</td>
+                                <td class="p-3 ${color} font-bold text-xs uppercase">${statusIcon} ${d.status}</td>
+                            </tr>`;
+                    });
+                });
+        }
+
+        // --- 9. LEADERBOARD ---
+        async function loadLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = '<tr><td colspan="3" class="p-4 text-center">Loading...</td></tr>';
+            
+            const snap = await db.collection('users').orderBy('points', 'desc').limit(10).get();
+            list.innerHTML = '';
+            
+            let rank = 1;
+            snap.forEach(doc => {
+                const u = doc.data();
+                let rankIcon = rank;
+                if(rank===1) rankIcon = '🥇';
+                if(rank===2) rankIcon = '🥈';
+                if(rank===3) rankIcon = '🥉';
+                
+                list.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-bold text-gray-500">${rankIcon}</td>
+                        <td class="p-4 font-bold text-gray-700">${u.username}</td>
+                        <td class="p-4 text-right font-mono text-indigo-600 font-bold">${u.points}</td>
+                    </tr>
+                `;
+                rank++;
+            });
+        }
+
+        // Notification Logic
+        function toggleNotifications() { document.getElementById('notif-dropdown').classList.toggle('hidden'); }
+        function listenToNotifications() {
+            db.collection('notifications').where('target', 'in', [currentUser.uid, 'all']).orderBy('timestamp', 'desc').limit(10).onSnapshot(snapshot => {
+                const list = document.getElementById('notif-list');
+                const badge = document.getElementById('notif-badge');
+                list.innerHTML = '';
+                let hasUnread = false;
+                if(snapshot.empty) { list.innerHTML = '<p class="p-4 text-center text-xs text-gray-400">কোনো নোটিফিকেশন নেই</p>'; } 
+                else {
+                    snapshot.forEach(doc => {
+                        const n = doc.data();
+                        const time = new Date(n.timestamp).toLocaleTimeString();
+                        const isRead = localStorage.getItem(`read_${doc.id}`);
+                        if(!isRead) hasUnread = true;
+                        list.innerHTML += `<div class="p-3 border-b hover:bg-gray-50 ${isRead ? 'opacity-50' : 'bg-white'}"><p class="text-sm text-gray-800">${n.message}</p><p class="text-xs text-gray-400 mt-1">${time}</p></div>`;
+                    });
+                }
+                badge.classList.toggle('hidden', !hasUnread);
+            });
+        }
+        function markAllRead() {
+            db.collection('notifications').where('target', 'in', [currentUser.uid, 'all']).limit(10).get().then(snap => {
+                snap.forEach(doc => localStorage.setItem(`read_${doc.id}`, 'true'));
+                document.getElementById('notif-badge').classList.add('hidden');
+                toggleNotifications();
+            });
+        }
+        async function sendAdminNotification() {
+            const target = document.getElementById('adminNotifTarget').value.trim();
+            const msg = document.getElementById('adminNotifMsg').value.trim();
+            if(!msg) return;
+            await db.collection('notifications').add({ target, message: msg, timestamp: Date.now() });
+            Swal.fire('Sent', 'Notification sent', 'success');
+        }
+
+    </script>
+</body>
+</html>
