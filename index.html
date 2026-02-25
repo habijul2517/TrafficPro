@@ -208,7 +208,7 @@
                         <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-blue-400">
                             <p class="text-gray-500 font-bold">হেল্প এবং সাপোর্ট</p>
                             <div class="mt-3">
-                                <a href="https://t.me/azbot25" target="_blank" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-600 transition flex justify-center items-center gap-2 text-sm shadow">
+                                <a href="https://t.me/your_group_link" target="_blank" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-600 transition flex justify-center items-center gap-2 text-sm shadow">
                                     <i class="fab fa-telegram-plane"></i> টেলিগ্রাম গ্রুপে জয়েন করুন
                                 </a>
                                 <p class="text-xs text-center text-gray-400 mt-2">যেকোনো সমস্যা জানাতে গ্রুপে মেসেজ দিন</p>
@@ -217,23 +217,35 @@
                     </div>
                 </div>
 
-                <!-- VIEW: LEADERBOARD -->
+                <!-- VIEW: LEADERBOARD (UPDATED) -->
                 <div id="view-leaderboard" class="view-section hidden">
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
                         <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4 text-white flex justify-between items-center">
-                            <h3 class="text-lg font-bold"><i class="fas fa-crown mr-2"></i> সেরা ১০ পারফর্মার</h3>
+                            <div>
+                                <h3 class="text-lg font-bold"><i class="fas fa-crown mr-2"></i> সাপ্তাহিক লিডারবোর্ড</h3>
+                                <p class="text-xs opacity-80">সর্বোচ্চ কাজ সম্পন্নকারী ৩ জন পাবে পুরস্কার!</p>
+                            </div>
                             <button onclick="loadLeaderboard()" class="text-sm bg-white/20 px-2 py-1 rounded"><i class="fas fa-sync"></i></button>
                         </div>
+                        
+                        <!-- Prize Info -->
+                        <div class="grid grid-cols-3 gap-2 p-4 bg-orange-50 text-center text-xs md:text-sm border-b">
+                            <div class="text-yellow-600 font-bold"><i class="fas fa-trophy text-lg"></i><br>1st: 20,000 Pts</div>
+                            <div class="text-gray-500 font-bold"><i class="fas fa-medal text-lg"></i><br>2nd: 8,000 Pts</div>
+                            <div class="text-orange-600 font-bold"><i class="fas fa-medal text-lg"></i><br>3rd: 5,000 Pts</div>
+                        </div>
+
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
                                 <tr>
                                     <th class="p-4">Rank</th>
                                     <th class="p-4">User</th>
-                                    <th class="p-4 text-right">Points</th>
+                                    <th class="p-4 text-center">Tasks Done</th>
+                                    <th class="p-4 text-right">Prize</th>
                                 </tr>
                             </thead>
                             <tbody id="leaderboardList" class="divide-y text-sm">
-                                <tr><td colspan="3" class="p-4 text-center">Loading...</td></tr>
+                                <tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -321,17 +333,35 @@
                     </div>
                 </div>
 
-                <!-- VIEW: EARN (Timer Logic) -->
+                <!-- VIEW: EARN -->
                 <div id="view-earn" class="view-section hidden">
-                    <button onclick="loadTasks()" class="mb-4 text-indigo-600 float-right hover:bg-indigo-50 px-3 py-1 rounded"><i class="fas fa-sync"></i> রিফ্রেশ</button>
-                    <h3 class="text-lg font-bold mb-4">অ্যাক্টিভ টাস্ক</h3>
-                    <div class="bg-blue-50 p-3 rounded mb-4 text-sm text-blue-800 border-l-4 border-blue-500">
-                        <i class="fas fa-info-circle"></i> নিয়ম: লিঙ্কে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন। প্রতিটি লিঙ্ক ২৪ ঘণ্টায় একবারই দেখা যাবে।
+                    <!-- Category List View -->
+                    <div id="earn-categories-view">
+                        <h3 class="text-lg font-bold mb-4">কাজের ক্যাটাগরি সিলেক্ট করুন</h3>
+                        <div id="categoryList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Categories will load here -->
+                            <div class="col-span-3 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>
+                        </div>
                     </div>
-                    <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-4 clear-both"></div>
+
+                    <!-- Task List View (Hidden initially) -->
+                    <div id="earn-tasks-view" class="hidden">
+                        <button onclick="showCategories()" class="mb-4 text-gray-600 hover:bg-gray-200 px-3 py-1 rounded transition">
+                            <i class="fas fa-arrow-left"></i> পেছনে যান
+                        </button>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold" id="selectedCategoryTitle">Tasks</h3>
+                            <button onclick="refreshTasks()" class="text-indigo-600 hover:bg-indigo-50 px-3 py-1 rounded"><i class="fas fa-sync"></i> রিফ্রেশ</button>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-3 rounded mb-4 text-sm text-blue-800 border-l-4 border-blue-500">
+                            <i class="fas fa-info-circle"></i> নিয়ম: লিঙ্কে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন। প্রতিটি লিঙ্ক ২৪ ঘণ্টায় একবারই দেখা যাবে।
+                        </div>
+                        <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
                 </div>
 
-                <!-- VIEW: CAMPAIGN (UPDATED) -->
+                <!-- VIEW: CAMPAIGN -->
                 <div id="view-campaign" class="view-section hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
                         
@@ -341,10 +371,15 @@
                             
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-bold text-gray-700 mb-1">ক্যাম্পেইন টাইপ (খরচ প্রতি ভিউ)</label>
-                                    <select id="campType" onchange="calculateCampaignCost()" class="w-full border rounded p-3 bg-gray-50 focus:ring-2 focus:ring-indigo-500 outline-none">
-                                        <option value="direct">Direct Link (50 Pts/View - 30s)</option>
-                                        <option value="website">Website Visit (100 Pts/View - 60s)</option>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">ক্যাম্পেইন নাম (Title)</label>
+                                    <input type="text" id="campTitle" placeholder="Ex: My YouTube Video" class="w-full border rounded p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">ক্যাম্পেইন ক্যাটাগরি</label>
+                                    <select id="campCategory" onchange="calculateCampaignCost()" class="w-full border rounded p-3 bg-gray-50 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                        <option value="" data-cost="0">Select Category...</option>
+                                        <!-- Categories loaded dynamically -->
                                     </select>
                                 </div>
 
@@ -362,7 +397,7 @@
                                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
                                     <div class="flex justify-between items-center text-sm mb-1">
                                         <span class="text-gray-600">প্রতি ভিউ খরচ:</span>
-                                        <span class="font-bold text-gray-800" id="displayCostPerView">50 Pts</span>
+                                        <span class="font-bold text-gray-800" id="displayCostPerView">0 Pts</span>
                                     </div>
                                     <div class="flex justify-between items-center text-lg font-bold text-indigo-700 border-t border-indigo-200 pt-2 mt-2">
                                         <span>মোট খরচ:</span>
@@ -387,7 +422,7 @@
                                 <table class="w-full text-left text-sm">
                                     <thead class="bg-gray-100 text-gray-600">
                                         <tr>
-                                            <th class="p-3 rounded-l">Type</th>
+                                            <th class="p-3 rounded-l">Name/Type</th>
                                             <th class="p-3">Views/Limit</th>
                                             <th class="p-3 rounded-r text-right">Status</th>
                                         </tr>
@@ -414,16 +449,46 @@
                     </div>
                 </div>
                 
-                <!-- VIEW: ADMIN -->
+                <!-- VIEW: ADMIN (UPDATED) -->
                 <div id="view-admin" class="view-section hidden">
-                    <div class="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto border-t-4 border-red-500">
-                        <h3 class="text-xl font-bold mb-4 text-red-600">Admin Notification Sender</h3>
-                        <div>
-                            <label class="block text-sm font-bold mb-1">Target User ID (or 'all')</label>
-                            <input type="text" id="adminNotifTarget" value="all" class="w-full border p-2 rounded mb-3">
-                            <label class="block text-sm font-bold mb-1">Message</label>
-                            <textarea id="adminNotifMsg" class="w-full border p-2 rounded mb-3" rows="3"></textarea>
-                            <button onclick="sendAdminNotification()" class="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700">Send Notification</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Notification Sender -->
+                        <div class="bg-white rounded-xl shadow p-6 border-t-4 border-red-500">
+                            <h3 class="text-xl font-bold mb-4 text-red-600">Admin Notification</h3>
+                            <div>
+                                <label class="block text-sm font-bold mb-1">Target User ID (or 'all')</label>
+                                <input type="text" id="adminNotifTarget" value="all" class="w-full border p-2 rounded mb-3">
+                                <label class="block text-sm font-bold mb-1">Message</label>
+                                <textarea id="adminNotifMsg" class="w-full border p-2 rounded mb-3" rows="3"></textarea>
+                                <button onclick="sendAdminNotification()" class="bg-red-600 text-white px-4 py-2 rounded font-bold hover:bg-red-700">Send Notification</button>
+                            </div>
+                        </div>
+
+                        <!-- Category Manager -->
+                        <div class="bg-white rounded-xl shadow p-6 border-t-4 border-blue-500">
+                            <h3 class="text-xl font-bold mb-4 text-blue-600">Category Manager</h3>
+                            <div class="space-y-3 mb-4">
+                                <input type="text" id="newCatName" placeholder="Category Name (e.g. YouTube View)" class="w-full border p-2 rounded">
+                                <div class="flex gap-2">
+                                    <input type="number" id="newCatCost" placeholder="Cost (Pts)" class="w-full border p-2 rounded">
+                                    <input type="number" id="newCatTimer" placeholder="Timer (Sec)" class="w-full border p-2 rounded">
+                                </div>
+                                <button onclick="createCategory()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Add Category</button>
+                            </div>
+                            
+                            <h4 class="font-bold text-sm text-gray-600 mb-2">Existing Categories:</h4>
+                            <ul id="adminCatList" class="space-y-2 max-h-40 overflow-y-auto">
+                                <!-- List populated by JS -->
+                            </ul>
+                        </div>
+
+                        <!-- Weekly Leaderboard Reset (NEW) -->
+                        <div class="bg-white rounded-xl shadow p-6 border-t-4 border-orange-500 col-span-1 md:col-span-2">
+                            <h3 class="text-xl font-bold mb-2 text-orange-600">Weekly Leaderboard Control</h3>
+                            <p class="text-sm text-gray-600 mb-4">সপ্তাহ শেষে এই বাটনে ক্লিক করুন। এটি অটোমেটিক ১ম, ২য় ও ৩য় জনকে পুরস্কার দিবে এবং সবার টাস্ক কাউন্ট রিসেট করবে।</p>
+                            <button onclick="resetWeeklyLeaderboard()" class="bg-orange-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-700 shadow-lg">
+                                <i class="fas fa-trophy mr-2"></i> সাপ্তাহিক পুরস্কার বিতরণ ও রিসেট করুন
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -453,6 +518,7 @@
         const db = firebase.firestore();
         let currentUser = null;
         let unsubscribeNotifs = null;
+        let currentCategoryId = null; // For Earn Section
 
         // --- 2. INITIALIZATION ---
         window.onload = () => {
@@ -536,8 +602,15 @@
                 }
 
                 await db.collection('users').doc(uid).set({
-                    username, email, points: 50, createdAt: Date.now(), totalReferrals: 0,
-                    checkInStreak: 0, lastCheckInDate: '', role: 'user'
+                    username, 
+                    email, 
+                    points: 50, 
+                    createdAt: Date.now(), 
+                    totalReferrals: 0,
+                    checkInStreak: 0, 
+                    lastCheckInDate: '', 
+                    role: 'user',
+                    weeklyTasks: 0 // New Field for Leaderboard
                 });
             } catch (error) {
                 document.getElementById('loader').classList.add('hidden');
@@ -595,10 +668,14 @@
             const titles = { 'dashboard': 'ড্যাশবোর্ড', 'wallet': 'ওয়ালেট', 'earn': 'পয়েন্ট আয়', 'campaign': 'ক্যাম্পেইন', 'referral': 'রেফারেল', 'leaderboard': 'লিডারবোর্ড', 'admin': 'Admin Panel' };
             document.getElementById('page-title').innerText = titles[view] || 'TrafficPro';
 
-            if(view === 'earn') loadTasks();
+            if(view === 'earn') loadEarnCategories();
             if(view === 'wallet') loadTransactions();
             if(view === 'leaderboard') loadLeaderboard();
-            if(view === 'campaign') loadMyCampaigns(); // Load History
+            if(view === 'campaign') {
+                loadMyCampaigns();
+                loadCampaignCategories(); // Load categories for dropdown
+            }
+            if(view === 'admin') loadAdminCategories();
         }
 
         function toggleDrawer(forceClose = false) {
@@ -656,20 +733,76 @@
             }
         }
 
-        // --- 6. TASK LOGIC (UPDATED WITH 24H RESTRICTION) ---
+        // --- 6. EARN & TASK LOGIC (UPDATED) ---
+        
+        // Step 1: Load Categories
+        async function loadEarnCategories() {
+            document.getElementById('earn-categories-view').classList.remove('hidden');
+            document.getElementById('earn-tasks-view').classList.add('hidden');
+            
+            const list = document.getElementById('categoryList');
+            list.innerHTML = '<div class="col-span-3 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>';
+
+            try {
+                const snap = await db.collection('categories').get();
+                list.innerHTML = '';
+                if(snap.empty) {
+                    list.innerHTML = '<p class="col-span-3 text-center text-gray-500">কোনো ক্যাটাগরি পাওয়া যায়নি।</p>';
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    list.innerHTML += `
+                        <div onclick="openCategoryTasks('${doc.id}', '${d.name}')" class="bg-white p-6 rounded-xl shadow hover:shadow-lg cursor-pointer transition border border-gray-100 flex flex-col items-center justify-center gap-3 group">
+                            <div class="h-14 w-14 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl group-hover:bg-indigo-600 group-hover:text-white transition">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h4 class="font-bold text-lg text-gray-800">${d.name}</h4>
+                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">Earn ${d.cost} Pts</span>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showCategories() {
+            document.getElementById('earn-categories-view').classList.remove('hidden');
+            document.getElementById('earn-tasks-view').classList.add('hidden');
+        }
+
+        function openCategoryTasks(catId, catName) {
+            currentCategoryId = catId;
+            document.getElementById('selectedCategoryTitle').innerText = catName + " Tasks";
+            document.getElementById('earn-categories-view').classList.add('hidden');
+            document.getElementById('earn-tasks-view').classList.remove('hidden');
+            loadTasks();
+        }
+
+        function refreshTasks() {
+            if(currentCategoryId) loadTasks();
+        }
+
+        // Step 2: Load Tasks for selected Category
         async function loadTasks() {
             const list = document.getElementById('taskList');
             list.innerHTML = '<div class="col-span-2 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>';
             
             try {
-                // 1. Get recent campaigns
-                const snap = await db.collection('campaigns').orderBy('createdAt', 'desc').limit(30).get();
+                // Filter by categoryId
+                const snap = await db.collection('campaigns')
+                    .where('categoryId', '==', currentCategoryId)
+                    .where('active', '==', true)
+                    .orderBy('createdAt', 'desc')
+                    .limit(30)
+                    .get();
                 
-                // 2. Get User's completed task history
                 const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
                 const completedMap = {};
                 completedSnap.forEach(doc => {
-                    completedMap[doc.id] = doc.data().timestamp; // Store timestamp
+                    completedMap[doc.id] = doc.data().timestamp;
                 });
 
                 list.innerHTML = '';
@@ -678,34 +811,28 @@
                 snap.forEach(doc => {
                     const data = doc.data();
                     
-                    // Logic: Limit Reached?
                     const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
-
-                    // Logic: 24 Hour CoolDown Check
                     const lastRunTime = completedMap[doc.id] || 0;
                     const currentTime = Date.now();
                     const oneDayMs = 24 * 60 * 60 * 1000;
                     const isCoolingDown = (currentTime - lastRunTime) < oneDayMs;
 
-                    // Only show if: Not owner, Not limit reached, Not in 24h cooldown
                     if(data.owner !== currentUser.uid && !isLimitReached && !isCoolingDown) {
                         hasTasks = true;
-                        const isWebsite = data.type === 'website';
-                        const reward = isWebsite ? 100 : 50;
-                        const waitTime = isWebsite ? '৬০ সেকেন্ড' : '৩০ সেকেন্ড';
-                        const waitSeconds = isWebsite ? 60 : 30;
-                        const icon = isWebsite ? 'fa-globe' : 'fa-link';
+                        // Use stored cost and timer from campaign doc
+                        const reward = data.costPerView || 50; 
+                        const waitSeconds = data.timer || 30;
 
                         list.innerHTML += `
                             <div class="bg-white p-5 rounded-xl shadow-md border hover:shadow-lg transition relative overflow-hidden group">
                                 <div class="flex justify-between items-start mb-3">
                                     <div class="flex items-center gap-3">
                                         <div class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-full flex items-center justify-center">
-                                            <i class="fas ${icon}"></i>
+                                            <i class="fas fa-link"></i>
                                         </div>
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">${isWebsite ? 'Website Visit' : 'Link Click'}</h4>
-                                            <p class="text-xs text-gray-500">অপেক্ষা: ${waitTime}</p>
+                                        <div class="overflow-hidden">
+                                            <h4 class="font-bold text-gray-800 truncate w-40 md:w-56">${data.title || 'Campaign'}</h4>
+                                            <p class="text-xs text-gray-500">অপেক্ষা: ${waitSeconds} সেকেন্ড</p>
                                         </div>
                                     </div>
                                     <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-bold">+${reward}</span>
@@ -720,7 +847,7 @@
                     }
                 });
                 
-                if(!hasTasks) list.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-10">বর্তমানে কোনো কাজ নেই বা সব কাজ শেষ। ২৪ ঘণ্টা পর আবার চেক করুন।</p>';
+                if(!hasTasks) list.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-10">এই ক্যাটাগরিতে বর্তমানে কোনো কাজ নেই।</p>';
             } catch (error) {
                 console.error(error);
                 list.innerHTML = '<p class="col-span-2 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>';
@@ -750,15 +877,16 @@
                         if (timeLeft <= 0) {
                             clearInterval(interval);
                             try {
-                                // 1. Add points to user
+                                // 1. Update User Points & Weekly Tasks
                                 await db.collection('users').doc(currentUser.uid).update({ 
-                                    points: firebase.firestore.FieldValue.increment(points) 
+                                    points: firebase.firestore.FieldValue.increment(points),
+                                    weeklyTasks: firebase.firestore.FieldValue.increment(1) // Increment Weekly Task Count
                                 });
-                                // 2. Increment clicks on campaign
+                                // 2. Update Campaign Clicks
                                 await db.collection('campaigns').doc(taskId).update({
                                     clicks: firebase.firestore.FieldValue.increment(1)
                                 });
-                                // 3. Record completion time for 24h restriction
+                                // 3. Record Completion
                                 await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(taskId).set({
                                     timestamp: Date.now()
                                 });
@@ -770,7 +898,7 @@
                                     timer: 2000,
                                     showConfirmButton: false
                                 });
-                                loadTasks(); // Reload tasks to hide the completed one
+                                loadTasks(); 
                             } catch (error) {
                                 Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error');
                             }
@@ -780,11 +908,28 @@
             });
         }
 
-        // --- 7. NEW CAMPAIGN LOGIC (UPDATED) ---
+        // --- 7. CAMPAIGN CREATION LOGIC (UPDATED) ---
+        
+        // Load categories into dropdown
+        async function loadCampaignCategories() {
+            const select = document.getElementById('campCategory');
+            // Keep the first option
+            select.innerHTML = '<option value="" data-cost="0">Select Category...</option>';
+            
+            const snap = await db.collection('categories').get();
+            snap.forEach(doc => {
+                const d = doc.data();
+                // Store cost and timer in data attributes
+                select.innerHTML += `<option value="${doc.id}" data-cost="${d.cost}" data-timer="${d.timer}" data-name="${d.name}">${d.name} (${d.cost} Pts/View)</option>`;
+            });
+        }
+
         function calculateCampaignCost() {
-            const type = document.getElementById('campType').value;
+            const select = document.getElementById('campCategory');
+            const selectedOption = select.options[select.selectedIndex];
+            const costPerView = parseInt(selectedOption.getAttribute('data-cost')) || 0;
+            
             const limit = parseInt(document.getElementById('campLimit').value) || 0;
-            const costPerView = type === 'website' ? 100 : 50;
             const totalCost = limit * costPerView;
 
             document.getElementById('displayCostPerView').innerText = costPerView + " Pts";
@@ -793,10 +938,21 @@
         }
 
         async function createCampaign() {
-            const type = document.getElementById('campType').value;
-            const url = document.getElementById('campUrl').value;
+            const title = document.getElementById('campTitle').value.trim();
+            const select = document.getElementById('campCategory');
+            const categoryId = select.value;
+            const url = document.getElementById('campUrl').value.trim();
             const limit = parseInt(document.getElementById('campLimit').value);
-            const totalCost = calculateCampaignCost();
+            
+            if(!title) return Swal.fire('Error', 'ক্যাম্পেইন নাম দিন', 'warning');
+            if(!categoryId) return Swal.fire('Error', 'ক্যাটাগরি সিলেক্ট করুন', 'warning');
+            
+            const selectedOption = select.options[select.selectedIndex];
+            const costPerView = parseInt(selectedOption.getAttribute('data-cost'));
+            const timer = parseInt(selectedOption.getAttribute('data-timer'));
+            const categoryName = selectedOption.getAttribute('data-name');
+            
+            const totalCost = limit * costPerView;
 
             if(!limit || limit < 1) return Swal.fire('Error', 'কমপক্ষে ১টি ভিউ সিলেক্ট করুন', 'warning');
             if(currentUser.points < totalCost) return Swal.fire('Error', `আপনার পর্যাপ্ত পয়েন্ট নেই। প্রয়োজন: ${totalCost}`, 'warning');
@@ -808,22 +964,29 @@
                     points: firebase.firestore.FieldValue.increment(-totalCost) 
                 });
 
-                // Create Campaign with Limit
+                // Create Campaign with all details
                 await db.collection('campaigns').add({ 
                     owner: currentUser.uid, 
-                    type, 
-                    url, 
-                    limit, // Target Views
-                    clicks: 0, // Current Views
+                    title: title,
+                    categoryId: categoryId,
+                    categoryName: categoryName,
+                    costPerView: costPerView,
+                    timer: timer,
+                    url: url, 
+                    limit: limit, 
+                    clicks: 0, 
                     active: true,
                     createdAt: Date.now() 
                 });
 
                 Swal.fire('Success', 'ক্যাম্পেইন চালু হয়েছে!', 'success');
+                // Reset Form
+                document.getElementById('campTitle').value = '';
                 document.getElementById('campUrl').value = '';
                 document.getElementById('campLimit').value = '';
-                calculateCampaignCost(); // Reset display
-                loadMyCampaigns(); // Refresh list
+                select.value = '';
+                calculateCampaignCost(); 
+                loadMyCampaigns(); 
             } catch(e) {
                 Swal.fire('Error', e.message, 'error');
             }
@@ -849,7 +1012,8 @@
                             tbody.innerHTML += `
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">
-                                        <div class="font-bold text-gray-700 capitalize">${d.type}</div>
+                                        <div class="font-bold text-gray-700">${d.title || 'No Title'}</div>
+                                        <div class="text-xs text-gray-500">${d.categoryName || 'General'}</div>
                                         <div class="text-xs text-gray-400 truncate w-32"><a href="${d.url}" target="_blank">${d.url}</a></div>
                                     </td>
                                     <td class="p-3">
@@ -870,7 +1034,54 @@
                 });
         }
 
-        // --- 8. UTILS & WALLET LOGIC ---
+        // --- 8. ADMIN CATEGORY LOGIC (NEW) ---
+        async function createCategory() {
+            const name = document.getElementById('newCatName').value.trim();
+            const cost = parseInt(document.getElementById('newCatCost').value);
+            const timer = parseInt(document.getElementById('newCatTimer').value);
+
+            if(!name || !cost || !timer) return Swal.fire('Error', 'সব তথ্য দিন', 'warning');
+
+            try {
+                await db.collection('categories').add({
+                    name, cost, timer, createdAt: Date.now()
+                });
+                Swal.fire('Success', 'Category Added', 'success');
+                document.getElementById('newCatName').value = '';
+                document.getElementById('newCatCost').value = '';
+                document.getElementById('newCatTimer').value = '';
+                loadAdminCategories();
+            } catch(e) {
+                Swal.fire('Error', e.message, 'error');
+            }
+        }
+
+        async function loadAdminCategories() {
+            const list = document.getElementById('adminCatList');
+            const snap = await db.collection('categories').orderBy('createdAt', 'desc').get();
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `
+                    <li class="flex justify-between items-center bg-gray-50 p-2 rounded border">
+                        <div>
+                            <span class="font-bold">${d.name}</span>
+                            <span class="text-xs text-gray-500 ml-2">Cost: ${d.cost} | Time: ${d.timer}s</span>
+                        </div>
+                        <button onclick="deleteCategory('${doc.id}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                    </li>
+                `;
+            });
+        }
+
+        async function deleteCategory(id) {
+            if(confirm('Are you sure?')) {
+                await db.collection('categories').doc(id).delete();
+                loadAdminCategories();
+            }
+        }
+
+        // --- 9. UTILS & WALLET LOGIC ---
         function copyRefCode() {
             navigator.clipboard.writeText(currentUser.username);
             Swal.fire('Copied', 'Code Copied!', 'success');
@@ -964,31 +1175,86 @@
                 });
         }
 
-        // --- 9. LEADERBOARD ---
+        // --- 10. LEADERBOARD (UPDATED: Weekly Tasks) ---
         async function loadLeaderboard() {
             const list = document.getElementById('leaderboardList');
-            list.innerHTML = '<tr><td colspan="3" class="p-4 text-center">Loading...</td></tr>';
+            list.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
             
-            const snap = await db.collection('users').orderBy('points', 'desc').limit(10).get();
+            // Query ordered by weeklyTasks instead of points
+            const snap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(10).get();
             list.innerHTML = '';
             
             let rank = 1;
             snap.forEach(doc => {
                 const u = doc.data();
+                const tasks = u.weeklyTasks || 0;
                 let rankIcon = rank;
-                if(rank===1) rankIcon = '🥇';
-                if(rank===2) rankIcon = '🥈';
-                if(rank===3) rankIcon = '🥉';
+                let prizeText = '-';
+
+                if(rank===1) { rankIcon = '🥇'; prizeText = '20k Pts'; }
+                if(rank===2) { rankIcon = '🥈'; prizeText = '8k Pts'; }
+                if(rank===3) { rankIcon = '🥉'; prizeText = '5k Pts'; }
                 
                 list.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="p-4 font-bold text-gray-500">${rankIcon}</td>
                         <td class="p-4 font-bold text-gray-700">${u.username}</td>
-                        <td class="p-4 text-right font-mono text-indigo-600 font-bold">${u.points}</td>
+                        <td class="p-4 text-center font-mono text-indigo-600 font-bold">${tasks}</td>
+                        <td class="p-4 text-right text-xs font-bold text-orange-600">${prizeText}</td>
                     </tr>
                 `;
                 rank++;
             });
+        }
+
+        // --- 11. ADMIN: WEEKLY RESET LOGIC (NEW) ---
+        async function resetWeeklyLeaderboard() {
+            if(!confirm("আপনি কি নিশ্চিত? এটি ১ম ৩ জনকে পুরস্কার দিবে এবং সবার টাস্ক কাউন্ট ০ করে দিবে।")) return;
+
+            document.getElementById('loader').classList.remove('hidden');
+            try {
+                // 1. Get Top 3 Winners
+                const winnersSnap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(3).get();
+                const prizes = [20000, 8000, 5000];
+                
+                // Distribute Prizes
+                const prizePromises = winnersSnap.docs.map((doc, index) => {
+                    if(doc.data().weeklyTasks > 0) { // Only give prize if they did at least 1 task
+                        return db.collection('users').doc(doc.id).update({
+                            points: firebase.firestore.FieldValue.increment(prizes[index])
+                        });
+                    }
+                });
+                await Promise.all(prizePromises);
+
+                // 2. Reset All Users 'weeklyTasks' to 0
+                // Note: Firestore batch limit is 500. For a small app, this loop is fine. 
+                // For large scale, use Cloud Functions.
+                const allUsersSnap = await db.collection('users').get();
+                const batch = db.batch();
+                let count = 0;
+                
+                allUsersSnap.forEach(doc => {
+                    batch.update(doc.ref, { weeklyTasks: 0 });
+                    count++;
+                });
+                
+                await batch.commit();
+
+                // 3. Send Notification
+                await db.collection('notifications').add({
+                    target: 'all',
+                    message: 'সাপ্তাহিক লিডারবোর্ড রিসেট হয়েছে এবং বিজয়ীদের পুরস্কার দেওয়া হয়েছে! নতুন সপ্তাহ শুরু!',
+                    timestamp: Date.now()
+                });
+
+                document.getElementById('loader').classList.add('hidden');
+                Swal.fire('Success', `সফলভাবে রিসেট হয়েছে! ${count} জন ইউজারের ডাটা আপডেট হয়েছে।`, 'success');
+
+            } catch (error) {
+                document.getElementById('loader').classList.add('hidden');
+                Swal.fire('Error', error.message, 'error');
+            }
         }
 
         // Notification Logic
