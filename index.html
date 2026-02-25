@@ -217,7 +217,7 @@
                     </div>
                 </div>
 
-                <!-- VIEW: LEADERBOARD (UPDATED) -->
+                <!-- VIEW: LEADERBOARD -->
                 <div id="view-leaderboard" class="view-section hidden">
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
                         <div class="bg-gradient-to-r from-orange-500 to-red-500 p-4 text-white flex justify-between items-center">
@@ -436,15 +436,52 @@
                     </div>
                 </div>
 
-                <!-- VIEW: REFERRAL -->
+                <!-- VIEW: REFERRAL (UPDATED) -->
                 <div id="view-referral" class="view-section hidden">
-                    <div class="bg-white rounded-xl shadow p-8 text-center max-w-lg mx-auto">
-                        <i class="fas fa-gift text-5xl text-purple-500 mb-4 animate-bounce"></i>
-                        <h3 class="text-2xl font-bold">ইনভাইট করুন</h3>
-                        <p class="text-gray-500 mb-6 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান ১০০ পয়েন্ট!</p>
-                        <div class="bg-gray-100 p-4 rounded flex justify-between items-center border border-dashed border-gray-400">
-                            <span id="myRefCode" class="font-mono font-bold text-lg text-indigo-700">...</span>
-                            <button onclick="copyRefCode()" class="text-indigo-600 font-bold hover:bg-indigo-100 px-3 py-1 rounded">COPY</button>
+                    <div class="max-w-2xl mx-auto space-y-6">
+                        <!-- Referral Info Card -->
+                        <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+                            <i class="fas fa-gift text-5xl text-purple-500 mb-4 animate-bounce"></i>
+                            <h3 class="text-2xl font-bold text-gray-800">ইনভাইট করুন</h3>
+                            <p class="text-gray-500 mb-6 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান <span class="text-green-600 font-bold">৫০০ পয়েন্ট!</span></p>
+                            
+                            <!-- Referral Code -->
+                            <div class="mb-4">
+                                <p class="text-sm text-gray-500 mb-1">আপনার রেফার কোড</p>
+                                <div class="bg-gray-100 p-3 rounded flex justify-between items-center border border-dashed border-gray-400">
+                                    <span id="myRefCode" class="font-mono font-bold text-lg text-indigo-700">...</span>
+                                    <button onclick="copyRefCode()" class="text-indigo-600 font-bold hover:bg-indigo-100 px-3 py-1 rounded">COPY</button>
+                                </div>
+                            </div>
+
+                            <!-- Referral Link -->
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">আপনার রেফার লিংক</p>
+                                <div class="flex gap-2">
+                                    <input type="text" id="myRefLink" readonly class="w-full bg-gray-50 border rounded p-2 text-sm text-gray-600" value="Loading...">
+                                    <button onclick="copyRefLink()" class="bg-indigo-600 text-white px-4 rounded hover:bg-indigo-700"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referral History Table -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="p-4 bg-indigo-50 border-b flex justify-between items-center">
+                                <h3 class="font-bold text-indigo-800"><i class="fas fa-history mr-2"></i>রেফারেল হিস্টোরি</h3>
+                                <button onclick="loadReferralHistory()" class="text-xs text-indigo-600 hover:underline">রিফ্রেশ</button>
+                            </div>
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-gray-100 text-gray-600">
+                                    <tr>
+                                        <th class="p-3">User</th>
+                                        <th class="p-3">Date</th>
+                                        <th class="p-3 text-right">Bonus</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="refHistoryList" class="divide-y">
+                                    <tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -584,22 +621,30 @@
 
             document.getElementById('loader').classList.remove('hidden');
             try {
+                // 1. Check if username exists
                 const userCheck = await db.collection('users').where('username', '==', username).get();
                 if(!userCheck.empty) throw new Error("Username already taken!");
 
-                const cred = await auth.createUserWithEmailAndPassword(email, pass);
-                const uid = cred.user.uid;
-
+                // 2. Check Referral Code (If provided)
+                let referredBy = null;
                 if (refCode) {
                     const refQuery = await db.collection('users').where('username', '==', refCode).get();
-                    if(!refQuery.empty) {
+                    if(refQuery.empty) {
+                        throw new Error("ভুল রেফার কোড! সঠিক কোড দিন অথবা খালি রাখুন।");
+                    } else {
+                        referredBy = refCode;
+                        // Give bonus to referrer
                         const refDoc = refQuery.docs[0];
                         await db.collection('users').doc(refDoc.id).update({
-                            points: firebase.firestore.FieldValue.increment(100),
+                            points: firebase.firestore.FieldValue.increment(500), // Updated to 500
                             totalReferrals: firebase.firestore.FieldValue.increment(1)
                         });
                     }
                 }
+
+                // 3. Create User
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                const uid = cred.user.uid;
 
                 await db.collection('users').doc(uid).set({
                     username, 
@@ -610,8 +655,10 @@
                     checkInStreak: 0, 
                     lastCheckInDate: '', 
                     role: 'user',
-                    weeklyTasks: 0 // New Field for Leaderboard
+                    weeklyTasks: 0,
+                    referredBy: referredBy // Store who referred this user
                 });
+
             } catch (error) {
                 document.getElementById('loader').classList.add('hidden');
                 Swal.fire('Error', error.message, 'error');
@@ -653,6 +700,8 @@
             document.getElementById('dashPoints').innerText = currentUser.points;
             document.getElementById('dashStreak').innerText = currentUser.checkInStreak || 0;
             document.getElementById('myRefCode').innerText = currentUser.username;
+            // Update Referral Link
+            document.getElementById('myRefLink').value = `https://t.me/traffic_pro_bot?start=${currentUser.username}`;
         }
 
         function navigate(view) {
@@ -673,8 +722,9 @@
             if(view === 'leaderboard') loadLeaderboard();
             if(view === 'campaign') {
                 loadMyCampaigns();
-                loadCampaignCategories(); // Load categories for dropdown
+                loadCampaignCategories(); 
             }
+            if(view === 'referral') loadReferralHistory(); // Load History
             if(view === 'admin') loadAdminCategories();
         }
 
@@ -1086,6 +1136,12 @@
             navigator.clipboard.writeText(currentUser.username);
             Swal.fire('Copied', 'Code Copied!', 'success');
         }
+        
+        function copyRefLink() {
+            const link = document.getElementById('myRefLink').value;
+            navigator.clipboard.writeText(link);
+            Swal.fire('Copied', 'Link Copied!', 'success');
+        }
 
         function switchWalletTab(tab) {
             document.getElementById('deposit-form').classList.toggle('hidden', tab !== 'deposit');
@@ -1207,7 +1263,41 @@
             });
         }
 
-        // --- 11. ADMIN: WEEKLY RESET LOGIC (NEW) ---
+        // --- 11. REFERRAL HISTORY (NEW) ---
+        function loadReferralHistory() {
+            const list = document.getElementById('refHistoryList');
+            list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>';
+
+            db.collection('users')
+                .where('referredBy', '==', currentUser.username)
+                .orderBy('createdAt', 'desc')
+                .limit(20)
+                .get()
+                .then(snap => {
+                    list.innerHTML = '';
+                    if(snap.empty) {
+                        list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">No referrals yet</td></tr>';
+                    } else {
+                        snap.forEach(doc => {
+                            const d = doc.data();
+                            const date = new Date(d.createdAt).toLocaleDateString();
+                            list.innerHTML += `
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3 font-bold text-gray-700">${d.username}</td>
+                                    <td class="p-3 text-xs text-gray-500">${date}</td>
+                                    <td class="p-3 text-right text-green-600 font-bold">+500</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-400">Error loading history (Check Index)</td></tr>';
+                });
+        }
+
+        // --- 12. ADMIN: WEEKLY RESET LOGIC (NEW) ---
         async function resetWeeklyLeaderboard() {
             if(!confirm("আপনি কি নিশ্চিত? এটি ১ম ৩ জনকে পুরস্কার দিবে এবং সবার টাস্ক কাউন্ট ০ করে দিবে।")) return;
 
