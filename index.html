@@ -132,7 +132,7 @@
                     <i class="fas fa-users w-6 text-blue-500"></i> <span>রেফারেল</span>
                 </a>
                 
-                <a href="https://t.me/trafficprosupport" target="_blank" class="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
+                <a href="https://t.me/azbot25" target="_blank" class="flex items-center space-x-3 text-gray-700 p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition">
                     <i class="fab fa-telegram w-6 text-blue-500"></i> <span>সাপোর্ট গ্রুপ</span>
                 </a>
 
@@ -208,7 +208,7 @@
                         <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-blue-400">
                             <p class="text-gray-500 font-bold">হেল্প এবং সাপোর্ট</p>
                             <div class="mt-3">
-                                <a href="https://t.me/trafficprosupport" target="_blank" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-600 transition flex justify-center items-center gap-2 text-sm shadow">
+                                <a href="https://t.me/+yLJ9Lrcqv6VlOGU1" target="_blank" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-600 transition flex justify-center items-center gap-2 text-sm shadow">
                                     <i class="fab fa-telegram-plane"></i> টেলিগ্রাম গ্রুপে জয়েন করুন
                                 </a>
                                 <p class="text-xs text-center text-gray-400 mt-2">যেকোনো সমস্যা জানাতে গ্রুপে মেসেজ দিন</p>
@@ -625,6 +625,7 @@
             }
         }
 
+        // === সংশোধিত রেজিস্টার ফাংশন ===
         async function handleRegister() {
             const username = document.getElementById('regUsername').value.trim().toLowerCase();
             const email = document.getElementById('regEmail').value.trim();
@@ -636,38 +637,51 @@
 
             document.getElementById('loader').classList.remove('hidden');
             try {
+                // ১. ইউজারনেম চেক
                 const userCheck = await db.collection('users').where('username', '==', username).get();
                 if(!userCheck.empty) throw new Error("Username already taken!");
 
+                // ২. রেফার কোড চেক (অ্যাকাউন্ট তৈরির আগেই জাস্ট যাচাই করা)
                 let referredBy = null;
+                let referrerDocId = null;
+                
                 if (refCode) {
                     const refQuery = await db.collection('users').where('username', '==', refCode).get();
                     if(refQuery.empty) {
                         throw new Error("ভুল রেফার কোড! সঠিক কোড দিন অথবা খালি রাখুন।");
                     } else {
                         referredBy = refCode;
-                        const refDoc = refQuery.docs[0];
-                        await db.collection('users').doc(refDoc.id).update({
-                            points: firebase.firestore.FieldValue.increment(500),
-                            totalReferrals: firebase.firestore.FieldValue.increment(1)
-                        });
+                        referrerDocId = refQuery.docs[0].id; // আইডি সেইভ করে রাখলাম
                     }
                 }
 
+                // ৩. ফায়ারবেস অথেন্টিকেশন অ্যাকাউন্ট তৈরি (ইউজার লগিন হয়ে যাবে)
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 const uid = cred.user.uid;
 
+                // ৪. নতুন ইউজারের ডাটাবেস তৈরি
                 await db.collection('users').doc(uid).set({
                     username, email, points: 50, createdAt: Date.now(), 
                     totalReferrals: 0, checkInStreak: 0, lastCheckInDate: '', 
                     role: 'user', weeklyTasks: 0, referredBy: referredBy
                 });
 
+                // ৫. এখন ইউজার অথেনটিকেটেড (isAuth == true)। তাই এবার রেফারারকে পয়েন্ট দেওয়া যাবে।
+                if (referrerDocId) {
+                    await db.collection('users').doc(referrerDocId).update({
+                        points: firebase.firestore.FieldValue.increment(500),
+                        totalReferrals: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+
+                // সফল হলে onAuthStateChanged স্বয়ংক্রিয়ভাবে অ্যাপ লোড করে নিবে
+
             } catch (error) {
                 document.getElementById('loader').classList.add('hidden');
                 Swal.fire('Error', error.message, 'error');
             }
         }
+        // === সংশোধিত রেজিস্টার ফাংশন শেষ ===
 
         function logout() {
             if(unsubscribeNotifs) unsubscribeNotifs();
@@ -921,7 +935,7 @@
             Swal.fire({
                 title: 'যাচাই করা হচ্ছে...',
                 html: `
-                    <div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেন না।</div>
+                    <div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেনজীবী করবেন না।</div>
                     <div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div>
                     <div class="text-sm text-gray-500">সেকেন্ড বাকি</div>
                 `,
@@ -1260,7 +1274,7 @@
             document.getElementById('loader').classList.remove('hidden');
             try {
                 const winnersSnap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(3).get();
-                const prizes = [20000, 8000, 5000];
+                const prizes =[20000, 8000, 5000];
                 const prizePromises = winnersSnap.docs.map((doc, index) => { if(doc.data().weeklyTasks > 0) { return db.collection('users').doc(doc.id).update({ points: firebase.firestore.FieldValue.increment(prizes[index]) }); } });
                 await Promise.all(prizePromises);
 
@@ -1286,7 +1300,7 @@
             });
         }
         function markAllRead() {
-            db.collection('notifications').where('target', 'in', [currentUser.uid, 'all']).limit(10).get().then(snap => { snap.forEach(doc => localStorage.setItem(`read_${doc.id}`, 'true')); document.getElementById('notif-badge').classList.add('hidden'); toggleNotifications(); });
+            db.collection('notifications').where('target', 'in',[currentUser.uid, 'all']).limit(10).get().then(snap => { snap.forEach(doc => localStorage.setItem(`read_${doc.id}`, 'true')); document.getElementById('notif-badge').classList.add('hidden'); toggleNotifications(); });
         }
         async function sendAdminNotification() {
             const target = document.getElementById('adminNotifTarget').value.trim(); const msg = document.getElementById('adminNotifMsg').value.trim(); if(!msg) return;
