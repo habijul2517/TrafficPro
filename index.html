@@ -228,7 +228,6 @@
                             <button onclick="loadLeaderboard()" class="text-sm bg-white/20 px-2 py-1 rounded"><i class="fas fa-sync"></i></button>
                         </div>
                         
-                        <!-- Prize Info -->
                         <div class="grid grid-cols-3 gap-2 p-4 bg-orange-50 text-center text-xs md:text-sm border-b">
                             <div class="text-yellow-600 font-bold"><i class="fas fa-trophy text-lg"></i><br>1st: 20,000 Pts</div>
                             <div class="text-gray-500 font-bold"><i class="fas fa-medal text-lg"></i><br>2nd: 8,000 Pts</div>
@@ -335,19 +334,16 @@
 
                 <!-- VIEW: EARN -->
                 <div id="view-earn" class="view-section hidden">
-                    <!-- Category List View -->
                     <div id="earn-categories-view">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold">কাজের ক্যাটাগরি সিলেক্ট করুন</h3>
                             <button onclick="loadEarnCategories()" class="text-sm bg-indigo-100 text-indigo-600 hover:bg-indigo-200 px-3 py-1 rounded transition"><i class="fas fa-sync"></i> রিলোড</button>
                         </div>
                         <div id="categoryList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- Categories will load here -->
                             <div class="col-span-3 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>
                         </div>
                     </div>
 
-                    <!-- Task List View (Hidden initially) -->
                     <div id="earn-tasks-view" class="hidden">
                         <button onclick="showCategories()" class="mb-4 text-gray-600 hover:bg-gray-200 px-3 py-1 rounded transition">
                             <i class="fas fa-arrow-left"></i> পেছনে যান
@@ -358,7 +354,7 @@
                         </div>
                         
                         <div class="bg-blue-50 p-3 rounded mb-4 text-sm text-blue-800 border-l-4 border-blue-500">
-                            <i class="fas fa-info-circle"></i> নিয়ম: লিঙ্কে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন। প্রতিটি লিঙ্ক ২৪ ঘণ্টায় একবারই দেখা যাবে।
+                            <i class="fas fa-info-circle"></i> নিয়ম: লিংকে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন। সিস্টেম এডস প্রতি ঘন্টায় লিমিট অনুযায়ী আসবে।
                         </div>
                         <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
@@ -367,8 +363,6 @@
                 <!-- VIEW: CAMPAIGN -->
                 <div id="view-campaign" class="view-section hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                        
-                        <!-- Create Campaign Form -->
                         <div class="bg-white rounded-xl shadow-lg p-6 h-fit">
                             <h3 class="text-xl font-bold mb-4 text-indigo-700 border-b pb-2">নতুন ক্যাম্পেইন তৈরি করুন</h3>
                             
@@ -382,14 +376,12 @@
                                     <label class="block text-sm font-bold text-gray-700 mb-1">ক্যাম্পেইন ক্যাটাগরি</label>
                                     <select id="campCategory" onchange="handleCategorySelection()" class="w-full border rounded p-3 bg-gray-50 focus:ring-2 focus:ring-indigo-500 outline-none">
                                         <option value="" data-cost="0" data-verify="false">Select Category...</option>
-                                        <!-- Categories loaded dynamically -->
                                     </select>
                                 </div>
 
-                                <!-- Verify Code Input (Hidden by default, shown if Category requires verification) -->
                                 <div id="verifyCodeDiv" class="hidden bg-red-50 p-3 rounded border border-red-200">
                                     <label class="block text-sm font-bold text-red-700 mb-1"><i class="fas fa-shield-alt"></i> ভেরিফাই কোড (সিক্রেট কোড)</label>
-                                    <p class="text-xs text-red-500 mb-2">এই ক্যাটাগরিতে ইউজারকে কাজ শেষে এই কোডটি দিতে হবে। আপনার ভিডিও বা লিংকে এই কোডটি লুকিয়ে রাখুন।</p>
+                                    <p class="text-xs text-red-500 mb-2">এই ক্যাটাগরিতে ইউজারকে কাজ শেষে এই কোডটি দিতে হবে।</p>
                                     <input type="text" id="campVerifyCode" placeholder="Ex: 8492" class="w-full border rounded p-2 focus:ring-2 focus:ring-red-500 outline-none">
                                 </div>
 
@@ -403,7 +395,6 @@
                                     <input type="number" id="campLimit" oninput="calculateCampaignCost()" placeholder="Ex: 100" class="w-full border rounded p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
                                 </div>
 
-                                <!-- Cost Display -->
                                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
                                     <div class="flex justify-between items-center text-sm mb-1">
                                         <span class="text-gray-600">প্রতি ভিউ খরচ:</span>
@@ -421,7 +412,6 @@
                             </div>
                         </div>
 
-                        <!-- Campaign History -->
                         <div class="bg-white rounded-xl shadow-lg p-6">
                             <div class="flex justify-between items-center mb-4 border-b pb-2">
                                 <h3 class="text-xl font-bold text-gray-700">আমার ক্যাম্পেইন</h3>
@@ -449,13 +439,11 @@
                 <!-- VIEW: REFERRAL -->
                 <div id="view-referral" class="view-section hidden">
                     <div class="max-w-2xl mx-auto space-y-6">
-                        <!-- Referral Info Card -->
                         <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                             <i class="fas fa-gift text-5xl text-purple-500 mb-4 animate-bounce"></i>
                             <h3 class="text-2xl font-bold text-gray-800">ইনভাইট করুন</h3>
                             <p class="text-gray-500 mb-6 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান <span class="text-green-600 font-bold">৫০০ পয়েন্ট!</span></p>
                             
-                            <!-- Referral Code -->
                             <div class="mb-4">
                                 <p class="text-sm text-gray-500 mb-1">আপনার রেফার কোড</p>
                                 <div class="bg-gray-100 p-3 rounded flex justify-between items-center border border-dashed border-gray-400">
@@ -464,7 +452,6 @@
                                 </div>
                             </div>
 
-                            <!-- Referral Link -->
                             <div>
                                 <p class="text-sm text-gray-500 mb-1">আপনার রেফার লিংক</p>
                                 <div class="flex gap-2">
@@ -473,32 +460,13 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Referral History Table -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                            <div class="p-4 bg-indigo-50 border-b flex justify-between items-center">
-                                <h3 class="font-bold text-indigo-800"><i class="fas fa-history mr-2"></i>রেফারেল হিস্টোরি</h3>
-                                <button onclick="loadReferralHistory()" class="text-xs text-indigo-600 hover:underline">রিফ্রেশ</button>
-                            </div>
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-gray-100 text-gray-600">
-                                    <tr>
-                                        <th class="p-3">User</th>
-                                        <th class="p-3">Date</th>
-                                        <th class="p-3 text-right">Bonus</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="refHistoryList" class="divide-y">
-                                    <tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
                 
                 <!-- VIEW: ADMIN -->
                 <div id="view-admin" class="view-section hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
                         <!-- Notification Sender -->
                         <div class="bg-white rounded-xl shadow p-6 border-t-4 border-red-500">
                             <h3 class="text-xl font-bold mb-4 text-red-600">Admin Notification</h3>
@@ -511,7 +479,7 @@
                             </div>
                         </div>
 
-                        <!-- Category Manager -->
+                        <!-- Category Manager Update -->
                         <div class="bg-white rounded-xl shadow p-6 border-t-4 border-blue-500">
                             <h3 class="text-xl font-bold mb-4 text-blue-600">Category Manager</h3>
                             <div class="space-y-3 mb-4">
@@ -522,18 +490,28 @@
                                 </div>
                                 <div class="flex items-center gap-2 mb-2 p-2 bg-gray-50 border rounded">
                                     <input type="checkbox" id="newCatVerify" class="w-4 h-4 text-blue-600 rounded">
-                                    <label for="newCatVerify" class="text-sm font-bold text-gray-700">Verify Task (ইউজারকে প্রমাণ বা কোড দিতে হবে)</label>
+                                    <label for="newCatVerify" class="text-sm font-bold text-gray-700">Verify Task (প্রমাণ চাইবে)</label>
                                 </div>
+                                
+                                <!-- Telegram Auto Ads Feature -->
+                                <div class="border border-purple-200 rounded p-3 bg-purple-50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <input type="checkbox" id="newCatTelegramAds" onchange="toggleTelegramAds()" class="w-4 h-4 text-purple-600 rounded cursor-pointer">
+                                        <label for="newCatTelegramAds" class="text-sm font-bold text-purple-800 cursor-pointer">Telegram Mine App Ads (প্রতি ঘন্টায় ২০ টাস্ক)</label>
+                                    </div>
+                                    <div id="telegramAdInputs" class="hidden space-y-2 mt-2">
+                                        <input type="text" id="newCatAdexoraId" placeholder="Adexora ID" class="w-full border border-purple-300 p-2 rounded text-sm">
+                                        <input type="text" id="newCatAdsgramId" placeholder="Adsgram ID" class="w-full border border-purple-300 p-2 rounded text-sm">
+                                    </div>
+                                </div>
+
                                 <button onclick="createCategory()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Add Category</button>
                             </div>
                             
                             <h4 class="font-bold text-sm text-gray-600 mb-2">Existing Categories:</h4>
-                            <ul id="adminCatList" class="space-y-2 max-h-40 overflow-y-auto">
-                                <!-- List populated by JS -->
-                            </ul>
+                            <ul id="adminCatList" class="space-y-2 max-h-40 overflow-y-auto"></ul>
                         </div>
 
-                        <!-- Weekly Leaderboard Reset -->
                         <div class="bg-white rounded-xl shadow p-6 border-t-4 border-orange-500 col-span-1 md:col-span-2">
                             <h3 class="text-xl font-bold mb-2 text-orange-600">Weekly Leaderboard Control</h3>
                             <p class="text-sm text-gray-600 mb-4">সপ্তাহ শেষে এই বাটনে ক্লিক করুন। এটি অটোমেটিক ১ম, ২য় ও ৩য় জনকে পুরস্কার দিবে এবং সবার টাস্ক কাউন্ট রিসেট করবে।</p>
@@ -548,13 +526,12 @@
         </main>
     </div>
 
-    <!-- FIREBASE SDK (Compat v9) -->
+    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // --- 1. CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyBpkwRH32c7RaFU7IZJznATjMQPmbaJjb0", 
             authDomain: "diamond-t-a023f.firebaseapp.com",
@@ -569,10 +546,16 @@
         const db = firebase.firestore();
         let currentUser = null;
         let unsubscribeNotifs = null;
+        
+        // Task Variables
         let currentCategoryId = null; 
         let currentCategoryRequiresVerify = false; 
+        let currentCategoryIsSystemAd = false;
+        let currentAdexoraId = '';
+        let currentAdsgramId = '';
+        let currentCategoryCost = 0;
+        let currentCategoryTimer = 0;
 
-        // --- 2. INITIALIZATION ---
         window.onload = () => {
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
@@ -580,9 +563,7 @@
                     if (userDoc.exists) {
                         currentUser = { uid: user.uid, ...userDoc.data() };
                         loadApp();
-                    } else {
-                        auth.signOut();
-                    }
+                    } else { auth.signOut(); }
                 } else {
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('auth-section').classList.remove('hidden');
@@ -591,7 +572,6 @@
             });
         };
 
-        // --- 3. AUTH LOGIC ---
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('login-form');
             const regForm = document.getElementById('register-form');
@@ -599,13 +579,11 @@
             const btnReg = document.getElementById('btn-register-mode');
 
             if (mode === 'login') {
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
+                loginForm.classList.remove('hidden'); regForm.classList.add('hidden');
                 btnLogin.className = "flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition";
                 btnReg.className = "flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition";
             } else {
-                loginForm.classList.add('hidden');
-                regForm.classList.remove('hidden');
+                loginForm.classList.add('hidden'); regForm.classList.remove('hidden');
                 btnReg.className = "flex-1 py-2 rounded-md font-bold text-sm bg-white shadow text-indigo-600 transition";
                 btnLogin.className = "flex-1 py-2 rounded-md font-bold text-sm text-gray-500 hover:text-indigo-600 transition";
             }
@@ -615,17 +593,11 @@
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             if(!email || !pass) return Swal.fire('Error', 'সব তথ্য দিন', 'error');
-
             document.getElementById('loader').classList.remove('hidden');
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-            } catch (error) {
-                document.getElementById('loader').classList.add('hidden');
-                Swal.fire('Error', error.message, 'error');
-            }
+            try { await auth.signInWithEmailAndPassword(email, pass); } 
+            catch (error) { document.getElementById('loader').classList.add('hidden'); Swal.fire('Error', error.message, 'error'); }
         }
 
-        // === সংশোধিত রেজিস্টার ফাংশন ===
         async function handleRegister() {
             const username = document.getElementById('regUsername').value.trim().toLowerCase();
             const email = document.getElementById('regEmail').value.trim();
@@ -637,59 +609,39 @@
 
             document.getElementById('loader').classList.remove('hidden');
             try {
-                // ১. ইউজারনেম চেক
                 const userCheck = await db.collection('users').where('username', '==', username).get();
                 if(!userCheck.empty) throw new Error("Username already taken!");
 
-                // ২. রেফার কোড চেক (অ্যাকাউন্ট তৈরির আগেই জাস্ট যাচাই করা)
-                let referredBy = null;
-                let referrerDocId = null;
-                
+                let referredBy = null; let referrerDocId = null;
                 if (refCode) {
                     const refQuery = await db.collection('users').where('username', '==', refCode).get();
-                    if(refQuery.empty) {
-                        throw new Error("ভুল রেফার কোড! সঠিক কোড দিন অথবা খালি রাখুন।");
-                    } else {
-                        referredBy = refCode;
-                        referrerDocId = refQuery.docs[0].id; // আইডি সেইভ করে রাখলাম
-                    }
+                    if(refQuery.empty) throw new Error("ভুল রেফার কোড!");
+                    else { referredBy = refCode; referrerDocId = refQuery.docs[0].id; }
                 }
 
-                // ৩. ফায়ারবেস অথেন্টিকেশন অ্যাকাউন্ট তৈরি (ইউজার লগিন হয়ে যাবে)
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 const uid = cred.user.uid;
 
-                // ৪. নতুন ইউজারের ডাটাবেস তৈরি
                 await db.collection('users').doc(uid).set({
                     username, email, points: 50, createdAt: Date.now(), 
                     totalReferrals: 0, checkInStreak: 0, lastCheckInDate: '', 
                     role: 'user', weeklyTasks: 0, referredBy: referredBy
                 });
 
-                // ৫. এখন ইউজার অথেনটিকেটেড (isAuth == true)। তাই এবার রেফারারকে পয়েন্ট দেওয়া যাবে।
                 if (referrerDocId) {
                     await db.collection('users').doc(referrerDocId).update({
                         points: firebase.firestore.FieldValue.increment(500),
                         totalReferrals: firebase.firestore.FieldValue.increment(1)
                     });
                 }
-
-                // সফল হলে onAuthStateChanged স্বয়ংক্রিয়ভাবে অ্যাপ লোড করে নিবে
-
             } catch (error) {
                 document.getElementById('loader').classList.add('hidden');
                 Swal.fire('Error', error.message, 'error');
             }
         }
-        // === সংশোধিত রেজিস্টার ফাংশন শেষ ===
 
-        function logout() {
-            if(unsubscribeNotifs) unsubscribeNotifs();
-            auth.signOut();
-            location.reload();
-        }
+        function logout() { if(unsubscribeNotifs) unsubscribeNotifs(); auth.signOut(); location.reload(); }
 
-        // --- 4. APP NAVIGATION & UI ---
         function loadApp() {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('app-section').classList.remove('hidden');
@@ -697,20 +649,15 @@
             updateUserDisplay();
             
             db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
-                const data = doc.data();
-                currentUser.points = data.points;
-                currentUser.checkInStreak = data.checkInStreak || 0;
-                currentUser.lastCheckInDate = data.lastCheckInDate || "";
-                currentUser.role = data.role || 'user';
-                updateUserDisplay();
+                const data = doc.data(); currentUser.points = data.points; currentUser.checkInStreak = data.checkInStreak || 0;
+                currentUser.lastCheckInDate = data.lastCheckInDate || ""; currentUser.role = data.role || 'user'; updateUserDisplay();
             });
 
             if(currentUser.role === 'admin' || currentUser.username === 'admin') {
                 document.getElementById('admin-link').classList.remove('hidden');
             }
 
-            listenToNotifications();
-            navigate('dashboard');
+            listenToNotifications(); navigate('dashboard');
         }
 
         function updateUserDisplay() {
@@ -743,45 +690,27 @@
         }
 
         function toggleDrawer(forceClose = false) {
-            const drawer = document.getElementById('mobile-drawer');
-            const overlay = document.getElementById('drawer-overlay');
-            if (forceClose) {
-                drawer.classList.remove('drawer-open');
-                drawer.classList.add('drawer-closed');
-                overlay.classList.add('hidden');
-            } else {
-                const isOpen = drawer.classList.contains('drawer-open');
-                drawer.classList.toggle('drawer-open', !isOpen);
-                drawer.classList.toggle('drawer-closed', isOpen);
-                overlay.classList.toggle('hidden', isOpen);
-            }
+            const drawer = document.getElementById('mobile-drawer'); const overlay = document.getElementById('drawer-overlay');
+            if (forceClose) { drawer.classList.remove('drawer-open'); drawer.classList.add('drawer-closed'); overlay.classList.add('hidden'); } 
+            else { const isOpen = drawer.classList.contains('drawer-open'); drawer.classList.toggle('drawer-open', !isOpen); drawer.classList.toggle('drawer-closed', isOpen); overlay.classList.toggle('hidden', isOpen); }
         }
 
         async function claimBonus() {
             const today = new Date().toISOString().split('T')[0];
-            const lastDate = currentUser.lastCheckInDate;
-            let streak = currentUser.checkInStreak || 0;
-
+            const lastDate = currentUser.lastCheckInDate; let streak = currentUser.checkInStreak || 0;
             if (lastDate === today) return Swal.fire('Wait', 'আজকের বোনাস আপনি ইতিমধ্যে নিয়ে ফেলেছেন!', 'info');
-
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
             if (lastDate === yesterday.toISOString().split('T')[0]) { streak++; } else { streak = 1; }
-
             const rewardCalculationStreak = streak > 7 ? 7 : streak;
             const points = 20 + ((rewardCalculationStreak - 1) * 5); 
 
             try {
-                await db.collection('users').doc(currentUser.uid).update({
-                    points: firebase.firestore.FieldValue.increment(points),
-                    lastCheckInDate: today, checkInStreak: streak
-                });
+                await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(points), lastCheckInDate: today, checkInStreak: streak });
                 Swal.fire({ icon: 'success', title: `Day ${streak} Bonus!`, text: `আপনি পেয়েছেন ${points} পয়েন্ট! নিয়মিত আসুন।` });
             } catch (e) { Swal.fire('Error', e.message, 'error'); }
         }
 
-        // --- 6. EARN & TASK LOGIC ---
-        
+        // --- EARN & TASK LOGIC ---
         async function loadEarnCategories() {
             document.getElementById('earn-categories-view').classList.remove('hidden');
             document.getElementById('earn-tasks-view').classList.add('hidden');
@@ -791,111 +720,141 @@
 
             try {
                 const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
-                const completedMap = {};
-                completedSnap.forEach(doc => completedMap[doc.id] = doc.data().timestamp);
-                const currentTime = Date.now();
-                const oneDayMs = 24 * 60 * 60 * 1000;
+                const completedMap = {}; completedSnap.forEach(doc => completedMap[doc.id] = doc.data().timestamp);
+                const currentTime = Date.now(); const oneDayMs = 24 * 60 * 60 * 1000;
 
                 const campaignsSnap = await db.collection('campaigns').where('active', '==', true).get();
                 const availableTasksCount = {};
-                
                 campaignsSnap.forEach(doc => {
-                    const data = doc.data();
-                    const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
-                    const lastRunTime = completedMap[doc.id] || 0;
-                    const isCoolingDown = (currentTime - lastRunTime) < oneDayMs;
-
-                    if (data.owner !== currentUser.uid && !isLimitReached && !isCoolingDown) {
-                        availableTasksCount[data.categoryId] = (availableTasksCount[data.categoryId] || 0) + 1;
-                    }
+                    const data = doc.data(); const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
+                    const lastRunTime = completedMap[doc.id] || 0; const isCoolingDown = (currentTime - lastRunTime) < oneDayMs;
+                    if (data.owner !== currentUser.uid && !isLimitReached && !isCoolingDown) { availableTasksCount[data.categoryId] = (availableTasksCount[data.categoryId] || 0) + 1; }
                 });
+
+                // Load System Tasks completion for current hour
+                const currentHourId = new Date().toISOString().slice(0, 13);
+                let sysTasksData = {};
+                try {
+                    const sysTasksSnap = await db.collection('users').doc(currentUser.uid).collection('hourlyTasks').doc(currentHourId).get();
+                    if(sysTasksSnap.exists) sysTasksData = sysTasksSnap.data();
+                } catch(e) {}
 
                 const snap = await db.collection('categories').get();
                 list.innerHTML = '';
-                if(snap.empty) {
-                    list.innerHTML = '<p class="col-span-3 text-center text-gray-500">কোনো ক্যাটাগরি পাওয়া যায়নি।</p>';
-                    return;
-                }
+                if(snap.empty) { list.innerHTML = '<p class="col-span-3 text-center text-gray-500">কোনো ক্যাটাগরি পাওয়া যায়নি।</p>'; return; }
 
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const tasksAvailable = availableTasksCount[doc.id] || 0;
+                    let tasksAvailable = 0; let badgeHtml = '';
+                    
+                    if (d.isSystemAd) {
+                        const completedThisHour = sysTasksData[doc.id] || 0;
+                        tasksAvailable = Math.max(0, 20 - completedThisHour); // 20 Limit per hour for Telegram Ads
+                        badgeHtml = '<span class="absolute top-2 left-2 text-purple-600 text-[10px] bg-purple-100 px-2 py-0.5 rounded-full font-bold border border-purple-200"><i class="fas fa-robot"></i> System Ads</span>';
+                    } else { tasksAvailable = availableTasksCount[doc.id] || 0; }
+
                     const requiresVerify = d.requiresVerify ? true : false;
-                    const verifyBadge = requiresVerify ? '<span class="absolute top-2 right-2 text-red-500 text-xs bg-red-100 px-2 py-0.5 rounded-full"><i class="fas fa-shield-alt"></i> Verify</span>' : '';
+                    const verifyBadge = requiresVerify ? '<span class="absolute top-2 right-2 text-red-500 text-[10px] bg-red-100 px-2 py-0.5 rounded-full"><i class="fas fa-shield-alt"></i> Verify</span>' : '';
+
+                    const isSysStr = d.isSystemAd ? 'true' : 'false';
+                    const axId = d.adexoraId || ''; const agId = d.adsgramId || '';
 
                     list.innerHTML += `
-                        <div onclick="openCategoryTasks('${doc.id}', '${d.name}', ${requiresVerify})" class="bg-white p-6 rounded-xl shadow hover:shadow-lg cursor-pointer transition border border-gray-100 flex flex-col items-center justify-center gap-3 group relative">
-                            ${verifyBadge}
+                        <div onclick="openCategoryTasks('${doc.id}', '${d.name}', ${requiresVerify}, ${isSysStr}, '${axId}', '${agId}', ${d.cost}, ${d.timer})" class="bg-white p-6 rounded-xl shadow hover:shadow-lg cursor-pointer transition border border-gray-100 flex flex-col items-center justify-center gap-3 group relative">
+                            ${badgeHtml} ${verifyBadge}
                             <div class="h-14 w-14 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl group-hover:bg-indigo-600 group-hover:text-white transition">
-                                <i class="fas fa-layer-group"></i>
+                                <i class="fas ${d.isSystemAd ? 'fa-mobile-alt' : 'fa-layer-group'}"></i>
                             </div>
                             <h4 class="font-bold text-lg text-gray-800 text-center">${d.name}</h4>
-                            
                             <div class="flex gap-2">
                                 <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">Earn ${d.cost} Pts</span>
-                                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">${tasksAvailable} টি কাজ আছে</span>
+                                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">${tasksAvailable} টি কাজ</span>
                             </div>
                         </div>
                     `;
                 });
-            } catch (e) {
-                console.error(e);
-                list.innerHTML = '<p class="col-span-3 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>';
-            }
+            } catch (e) { list.innerHTML = '<p class="col-span-3 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>'; }
         }
 
-        function showCategories() {
-            document.getElementById('earn-categories-view').classList.remove('hidden');
-            document.getElementById('earn-tasks-view').classList.add('hidden');
-            loadEarnCategories();
-        }
+        function showCategories() { document.getElementById('earn-categories-view').classList.remove('hidden'); document.getElementById('earn-tasks-view').classList.add('hidden'); loadEarnCategories(); }
 
-        function openCategoryTasks(catId, catName, requiresVerify) {
+        function openCategoryTasks(catId, catName, requiresVerify, isSystemAd, adexoraId, adsgramId, cost, timer) {
             currentCategoryId = catId;
             currentCategoryRequiresVerify = requiresVerify; 
+            currentCategoryIsSystemAd = isSystemAd;
+            currentAdexoraId = adexoraId;
+            currentAdsgramId = adsgramId;
+            currentCategoryCost = cost;
+            currentCategoryTimer = timer;
+
             document.getElementById('selectedCategoryTitle').innerText = catName + " Tasks";
             document.getElementById('earn-categories-view').classList.add('hidden');
             document.getElementById('earn-tasks-view').classList.remove('hidden');
             loadTasks();
         }
 
-        function refreshTasks() {
-            if(currentCategoryId) loadTasks();
-        }
+        function refreshTasks() { if(currentCategoryId) loadTasks(); }
 
         async function loadTasks() {
             const list = document.getElementById('taskList');
             list.innerHTML = '<div class="col-span-2 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>';
             
             try {
-                const snap = await db.collection('campaigns')
-                    .where('categoryId', '==', currentCategoryId)
-                    .where('active', '==', true)
-                    .orderBy('createdAt', 'desc')
-                    .limit(30)
-                    .get();
-                
-                const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
-                const completedMap = {};
-                completedSnap.forEach(doc => completedMap[doc.id] = doc.data().timestamp);
+                // If it is an Admin Telegram Auto Ad Category
+                if(currentCategoryIsSystemAd) {
+                    const currentHourId = new Date().toISOString().slice(0, 13);
+                    const sysDoc = await db.collection('users').doc(currentUser.uid).collection('hourlyTasks').doc(currentHourId).get();
+                    const completedThisHour = sysDoc.exists ? (sysDoc.data()[currentCategoryId] || 0) : 0;
+                    const remaining = Math.max(0, 20 - completedThisHour); // Maximum 20 per hour logic
 
-                list.innerHTML = '';
-                let hasTasks = false;
+                    list.innerHTML = '';
+                    if(remaining === 0) { list.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-10 font-bold">এই ঘন্টার জন্য আপনার সমস্ত কাজ শেষ। পরবর্তী ঘন্টায় আবার চেষ্টা করুন!</p>'; return; }
+
+                    for(let i=1; i<=remaining; i++) {
+                        const isAdexora = i % 2 !== 0; 
+                        const adName = isAdexora ? "Adexora Reward Task" : "Adsgram Reward Task";
+                        const adId = isAdexora ? currentAdexoraId : currentAdsgramId;
+                        const iconHtml = isAdexora ? '<i class="fas fa-play"></i>' : '<i class="fas fa-video"></i>';
+                        
+                        list.innerHTML += `
+                            <div class="bg-white p-5 rounded-xl shadow border border-purple-100 hover:shadow-lg transition relative overflow-hidden group">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center">
+                                            ${iconHtml}
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <h4 class="font-bold text-gray-800 truncate w-40 md:w-56">${adName}</h4>
+                                            <p class="text-xs text-gray-500">অপেক্ষা: ${currentCategoryTimer} সেকেন্ড</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-bold">+${currentCategoryCost}</span>
+                                </div>
+                                <button onclick="startSystemTask('${currentCategoryId}', '${adName}', '${adId}', ${currentCategoryCost}, ${currentCategoryTimer})" 
+                                    class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold hover:bg-purple-700 transition active:scale-95">
+                                    Watch Ad
+                                </button>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+
+                // Normal Campaign Tasks
+                const snap = await db.collection('campaigns').where('categoryId', '==', currentCategoryId).where('active', '==', true).orderBy('createdAt', 'desc').limit(30).get();
+                const completedSnap = await db.collection('users').doc(currentUser.uid).collection('completedTasks').get();
+                const completedMap = {}; completedSnap.forEach(doc => completedMap[doc.id] = doc.data().timestamp);
+
+                list.innerHTML = ''; let hasTasks = false;
 
                 snap.forEach(doc => {
-                    const data = doc.data();
-                    const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
-                    const lastRunTime = completedMap[doc.id] || 0;
-                    const currentTime = Date.now();
-                    const oneDayMs = 24 * 60 * 60 * 1000;
+                    const data = doc.data(); const isLimitReached = (data.clicks || 0) >= (data.limit || 0);
+                    const lastRunTime = completedMap[doc.id] || 0; const currentTime = Date.now(); const oneDayMs = 24 * 60 * 60 * 1000;
                     const isCoolingDown = (currentTime - lastRunTime) < oneDayMs;
 
                     if(data.owner !== currentUser.uid && !isLimitReached && !isCoolingDown) {
-                        hasTasks = true;
-                        const reward = data.costPerView || 50; 
-                        const waitSeconds = data.timer || 30;
-                        const reqVer = data.requiresVerify || false;
-                        const vCode = data.verifyCode || '';
+                        hasTasks = true; const reward = data.costPerView || 50; const waitSeconds = data.timer || 30;
+                        const reqVer = data.requiresVerify || false; const vCode = data.verifyCode || '';
 
                         list.innerHTML += `
                             <div class="bg-white p-5 rounded-xl shadow-md border hover:shadow-lg transition relative overflow-hidden group">
@@ -911,7 +870,6 @@
                                     </div>
                                     <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-bold">+${reward}</span>
                                 </div>
-                                
                                 <button onclick="startTask('${doc.id}', '${data.url}', ${reward}, ${waitSeconds}, ${reqVer}, '${vCode}')" 
                                     class="w-full bg-indigo-600 text-white py-2 rounded-lg font-bold hover:bg-indigo-700 transition active:scale-95">
                                     কাজ শুরু করুন
@@ -922,69 +880,32 @@
                 });
                 
                 if(!hasTasks) list.innerHTML = '<p class="col-span-2 text-center text-gray-500 py-10">এই ক্যাটাগরিতে বর্তমানে কোনো কাজ নেই।</p>';
-            } catch (error) {
-                console.error(error);
-                list.innerHTML = '<p class="col-span-2 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>';
-            }
+            } catch (error) { list.innerHTML = '<p class="col-span-2 text-center text-red-500">ডাটা লোড করতে সমস্যা হয়েছে।</p>'; }
         }
 
+        // Standard Task Function
         function startTask(taskId, url, points, seconds, requiresVerify, correctCode) {
-            window.open(url, '_blank');
-            let timeLeft = seconds;
-            
+            window.open(url, '_blank'); let timeLeft = seconds;
             Swal.fire({
                 title: 'যাচাই করা হচ্ছে...',
-                html: `
-                    <div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেনজীবী করবেন না।</div>
-                    <div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div>
-                    <div class="text-sm text-gray-500">সেকেন্ড বাকি</div>
-                `,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
+                html: `<div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেন না।</div><div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div><div class="text-sm text-gray-500">সেকেন্ড বাকি</div>`,
+                allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false,
                 didOpen: () => {
                     const timerDisplay = document.getElementById('timerCount');
                     const interval = setInterval(() => {
-                        timeLeft--;
-                        if(timerDisplay) timerDisplay.innerText = timeLeft;
-
+                        timeLeft--; if(timerDisplay) timerDisplay.innerText = timeLeft;
                         if (timeLeft <= 0) {
                             clearInterval(interval);
-                            
                             if (requiresVerify) {
                                 Swal.close(); 
-                                Swal.fire({
-                                    title: 'প্রমাণ সাবমিট করুন',
-                                    input: 'text',
-                                    inputLabel: 'ভিডিও/লিংকে থাকা ভেরিফাই কোডটি এখানে দিন:',
-                                    inputPlaceholder: 'কোড লিখুন...',
-                                    inputAttributes: { required: true },
-                                    showCancelButton: true,
-                                    confirmButtonText: 'সাবমিট করুন',
-                                    cancelButtonText: 'বাতিল',
-                                    allowOutsideClick: false,
+                                Swal.fire({ title: 'প্রমাণ সাবমিট করুন', input: 'text', inputLabel: 'ভিডিও/লিংকে থাকা ভেরিফাই কোডটি এখানে দিন:', inputPlaceholder: 'কোড লিখুন...', inputAttributes: { required: true }, showCancelButton: true, confirmButtonText: 'সাবমিট করুন', cancelButtonText: 'বাতিল', allowOutsideClick: false,
                                     preConfirm: (value) => {
-                                        if (!value || value.trim() === '') {
-                                            Swal.showValidationMessage('আপনাকে অবশ্যই প্রমাণ বা কোড দিতে হবে!');
-                                            return false;
-                                        }
-                                        // Exact Code Validation (If campaign creator set a code)
-                                        if (correctCode && correctCode !== '' && value.trim() !== correctCode) {
-                                            Swal.showValidationMessage('ভুল কোড! সঠিক কোড দিন।');
-                                            return false;
-                                        }
+                                        if (!value || value.trim() === '') { Swal.showValidationMessage('আপনাকে অবশ্যই প্রমাণ বা কোড দিতে হবে!'); return false; }
+                                        if (correctCode && correctCode !== '' && value.trim() !== correctCode) { Swal.showValidationMessage('ভুল কোড! সঠিক কোড দিন।'); return false; }
                                         return value;
                                     }
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        processTaskReward(taskId, points);
-                                    } else {
-                                        Swal.fire('বাতিল', 'আপনি সঠিক প্রমাণ দেননি, তাই পয়েন্ট যোগ হয়নি।', 'info');
-                                    }
-                                });
-                            } else {
-                                processTaskReward(taskId, points);
-                            }
+                                }).then((result) => { if (result.isConfirmed) processTaskReward(taskId, points); else Swal.fire('বাতিল', 'আপনি সঠিক প্রমাণ দেননি, তাই পয়েন্ট যোগ হয়নি।', 'info'); });
+                            } else { processTaskReward(taskId, points); }
                         }
                     }, 1000);
                 }
@@ -993,125 +914,89 @@
 
         async function processTaskReward(taskId, points) {
             try {
-                await db.collection('users').doc(currentUser.uid).update({ 
-                    points: firebase.firestore.FieldValue.increment(points),
-                    weeklyTasks: firebase.firestore.FieldValue.increment(1) 
-                });
-                await db.collection('campaigns').doc(taskId).update({
-                    clicks: firebase.firestore.FieldValue.increment(1)
-                });
-                await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(taskId).set({
-                    timestamp: Date.now()
-                });
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'অভিনন্দন!',
-                    text: `${points} পয়েন্ট যোগ হয়েছে।`,
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-                loadTasks(); 
-            } catch (error) {
-                Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error');
-            }
+                await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(points), weeklyTasks: firebase.firestore.FieldValue.increment(1) });
+                await db.collection('campaigns').doc(taskId).update({ clicks: firebase.firestore.FieldValue.increment(1) });
+                await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(taskId).set({ timestamp: Date.now() });
+                Swal.fire({ icon: 'success', title: 'অভিনন্দন!', text: `${points} পয়েন্ট যোগ হয়েছে।`, timer: 2000, showConfirmButton: false }); loadTasks(); 
+            } catch (error) { Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error'); }
         }
 
+        // System Ads (Telegram Mine Apps) Task Function
+        function startSystemTask(catId, adName, adId, points, seconds) {
+            Swal.fire({
+                title: adName + ' Load হচ্ছে...',
+                html: `<div class="mb-4 text-xs text-gray-500">Network ID: ${adId}</div><div class="text-5xl font-bold text-purple-600 mb-2" id="timerCount">${seconds}</div><div class="text-sm text-gray-500">সেকেন্ড বাকি</div>`,
+                allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false,
+                didOpen: () => {
+                    let timeLeft = seconds; const timerDisplay = document.getElementById('timerCount');
+                    const interval = setInterval(() => {
+                        timeLeft--; if(timerDisplay) timerDisplay.innerText = timeLeft;
+                        if (timeLeft <= 0) { clearInterval(interval); processSystemTaskReward(catId, points); }
+                    }, 1000);
+                }
+            });
+        }
 
-        // --- 7. CAMPAIGN CREATION LOGIC ---
+        async function processSystemTaskReward(catId, points) {
+            try {
+                const currentHourId = new Date().toISOString().slice(0, 13);
+                await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(points), weeklyTasks: firebase.firestore.FieldValue.increment(1) });
+                await db.collection('users').doc(currentUser.uid).collection('hourlyTasks').doc(currentHourId).set({ [catId]: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+                Swal.fire({ icon: 'success', title: 'অভিনন্দন!', text: `${points} পয়েন্ট যোগ হয়েছে।`, timer: 2000, showConfirmButton: false }); loadTasks(); 
+            } catch (error) { Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error'); }
+        }
+
+        // --- CAMPAIGN CREATION LOGIC ---
         async function loadCampaignCategories() {
             const select = document.getElementById('campCategory');
             select.innerHTML = '<option value="" data-cost="0" data-verify="false">Select Category...</option>';
             const snap = await db.collection('categories').get();
             snap.forEach(doc => {
                 const d = doc.data();
-                const verifyStatus = d.requiresVerify ? 'true' : 'false';
-                select.innerHTML += `<option value="${doc.id}" data-cost="${d.cost}" data-timer="${d.timer}" data-name="${d.name}" data-verify="${verifyStatus}">${d.name} (${d.cost} Pts/View)</option>`;
+                if(!d.isSystemAd) { // Hide Admin Only Telegram Ads from Users
+                    const verifyStatus = d.requiresVerify ? 'true' : 'false';
+                    select.innerHTML += `<option value="${doc.id}" data-cost="${d.cost}" data-timer="${d.timer}" data-name="${d.name}" data-verify="${verifyStatus}">${d.name} (${d.cost} Pts/View)</option>`;
+                }
             });
         }
 
         function handleCategorySelection() {
-            calculateCampaignCost();
-            const select = document.getElementById('campCategory');
+            calculateCampaignCost(); const select = document.getElementById('campCategory');
+            if(select.selectedIndex === 0) { document.getElementById('verifyCodeDiv').classList.add('hidden'); return; }
             const selectedOption = select.options[select.selectedIndex];
             const requiresVerify = selectedOption.getAttribute('data-verify') === 'true';
-            
             const verifyDiv = document.getElementById('verifyCodeDiv');
-            if(requiresVerify) {
-                verifyDiv.classList.remove('hidden');
-            } else {
-                verifyDiv.classList.add('hidden');
-                document.getElementById('campVerifyCode').value = ''; // clear input if hidden
-            }
+            if(requiresVerify) { verifyDiv.classList.remove('hidden'); } else { verifyDiv.classList.add('hidden'); document.getElementById('campVerifyCode').value = ''; }
         }
 
         function calculateCampaignCost() {
-            const select = document.getElementById('campCategory');
-            const selectedOption = select.options[select.selectedIndex];
-            const costPerView = parseInt(selectedOption.getAttribute('data-cost')) || 0;
-            const limit = parseInt(document.getElementById('campLimit').value) || 0;
-            const totalCost = limit * costPerView;
-
-            document.getElementById('displayCostPerView').innerText = costPerView + " Pts";
-            document.getElementById('displayTotalCost').innerText = totalCost;
+            const select = document.getElementById('campCategory'); const selectedOption = select.options[select.selectedIndex];
+            const costPerView = selectedOption ? (parseInt(selectedOption.getAttribute('data-cost')) || 0) : 0;
+            const limit = parseInt(document.getElementById('campLimit').value) || 0; const totalCost = limit * costPerView;
+            document.getElementById('displayCostPerView').innerText = costPerView + " Pts"; document.getElementById('displayTotalCost').innerText = totalCost;
             return totalCost;
         }
 
         async function createCampaign() {
-            const title = document.getElementById('campTitle').value.trim();
-            const select = document.getElementById('campCategory');
-            const categoryId = select.value;
-            const url = document.getElementById('campUrl').value.trim();
-            const limit = parseInt(document.getElementById('campLimit').value);
-            const verifyCodeInput = document.getElementById('campVerifyCode').value.trim();
+            const title = document.getElementById('campTitle').value.trim(); const select = document.getElementById('campCategory'); const categoryId = select.value;
+            const url = document.getElementById('campUrl').value.trim(); const limit = parseInt(document.getElementById('campLimit').value); const verifyCodeInput = document.getElementById('campVerifyCode').value.trim();
+            if(!title) return Swal.fire('Error', 'ক্যাম্পেইন নাম দিন', 'warning'); if(!categoryId) return Swal.fire('Error', 'ক্যাটাগরি সিলেক্ট করুন', 'warning');
             
-            if(!title) return Swal.fire('Error', 'ক্যাম্পেইন নাম দিন', 'warning');
-            if(!categoryId) return Swal.fire('Error', 'ক্যাটাগরি সিলেক্ট করুন', 'warning');
-            
-            const selectedOption = select.options[select.selectedIndex];
-            const costPerView = parseInt(selectedOption.getAttribute('data-cost'));
-            const timer = parseInt(selectedOption.getAttribute('data-timer'));
-            const categoryName = selectedOption.getAttribute('data-name');
+            const selectedOption = select.options[select.selectedIndex]; const costPerView = parseInt(selectedOption.getAttribute('data-cost'));
+            const timer = parseInt(selectedOption.getAttribute('data-timer')); const categoryName = selectedOption.getAttribute('data-name');
             const requiresVerify = selectedOption.getAttribute('data-verify') === 'true';
             
-            if(requiresVerify && !verifyCodeInput) {
-                return Swal.fire('Error', 'এই ক্যাটাগরিতে ভেরিফাই কোড দেওয়া বাধ্যতামূলক।', 'warning');
-            }
-
+            if(requiresVerify && !verifyCodeInput) return Swal.fire('Error', 'এই ক্যাটাগরিতে ভেরিফাই কোড দেওয়া বাধ্যতামূলক।', 'warning');
             const totalCost = limit * costPerView;
-
             if(!limit || limit < 1) return Swal.fire('Error', 'কমপক্ষে ১টি ভিউ সিলেক্ট করুন', 'warning');
             if(currentUser.points < totalCost) return Swal.fire('Error', `আপনার পর্যাপ্ত পয়েন্ট নেই। প্রয়োজন: ${totalCost}`, 'warning');
             if(!url || !url.startsWith('http')) return Swal.fire('Error', 'সঠিক URL দিন (https://...)', 'error');
 
             try {
                 await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-totalCost) });
-                await db.collection('campaigns').add({ 
-                    owner: currentUser.uid, 
-                    title, 
-                    categoryId, 
-                    categoryName, 
-                    costPerView, 
-                    timer, 
-                    url, 
-                    limit, 
-                    clicks: 0, 
-                    active: true, 
-                    requiresVerify: requiresVerify,
-                    verifyCode: requiresVerify ? verifyCodeInput : null,
-                    createdAt: Date.now() 
-                });
-                
+                await db.collection('campaigns').add({ owner: currentUser.uid, title, categoryId, categoryName, costPerView, timer, url, limit, clicks: 0, active: true, requiresVerify, verifyCode: requiresVerify ? verifyCodeInput : null, createdAt: Date.now() });
                 Swal.fire('Success', 'ক্যাম্পেইন চালু হয়েছে!', 'success');
-                
-                // Reset Fields
-                document.getElementById('campTitle').value = ''; 
-                document.getElementById('campUrl').value = ''; 
-                document.getElementById('campLimit').value = ''; 
-                document.getElementById('campVerifyCode').value = '';
-                select.value = '';
-                handleCategorySelection(); // Will hide verify code box and calc 0 cost
-                loadMyCampaigns(); 
+                document.getElementById('campTitle').value = ''; document.getElementById('campUrl').value = ''; document.getElementById('campLimit').value = ''; document.getElementById('campVerifyCode').value = ''; select.value = ''; handleCategorySelection(); loadMyCampaigns(); 
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
@@ -1119,34 +1004,16 @@
             const tbody = document.getElementById('myCampaignList');
             db.collection('campaigns').where('owner', '==', currentUser.uid).orderBy('createdAt', 'desc').onSnapshot(snap => {
                 tbody.innerHTML = '';
-                if(snap.empty) {
-                    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">কোনো ক্যাম্পেইন নেই</td></tr>';
-                } else {
+                if(snap.empty) { tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">কোনো ক্যাম্পেইন নেই</td></tr>'; } 
+                else {
                     snap.forEach(doc => {
-                        const d = doc.data();
-                        const clicks = d.clicks || 0;
-                        const limit = d.limit || 0;
-                        const progress = Math.min((clicks / limit) * 100, 100);
-                        const isFinished = clicks >= limit;
+                        const d = doc.data(); const clicks = d.clicks || 0; const limit = d.limit || 0; const progress = Math.min((clicks / limit) * 100, 100); const isFinished = clicks >= limit;
                         const codeDisplay = d.requiresVerify ? `<div class="text-[10px] bg-red-100 text-red-600 px-1 mt-1 rounded inline-block">Code: ${d.verifyCode}</div>` : '';
-
                         tbody.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">
-                                    <div class="font-bold text-gray-700">${d.title || 'No Title'}</div>
-                                    <div class="text-xs text-gray-500">${d.categoryName || 'General'}</div>
-                                    <div class="text-xs text-gray-400 truncate w-32"><a href="${d.url}" target="_blank">${d.url}</a></div>
-                                    ${codeDisplay}
-                                </td>
-                                <td class="p-3">
-                                    <div class="text-sm font-bold">${clicks} / ${limit}</div>
-                                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                                        <div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${progress}%"></div>
-                                    </div>
-                                </td>
-                                <td class="p-3 text-right">
-                                    ${isFinished ? '<span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">Finished</span>' : '<span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded font-bold">Active</span>'}
-                                </td>
+                                <td class="p-3"><div class="font-bold text-gray-700">${d.title || 'No Title'}</div><div class="text-xs text-gray-500">${d.categoryName || 'General'}</div><div class="text-xs text-gray-400 truncate w-32"><a href="${d.url}" target="_blank">${d.url}</a></div>${codeDisplay}</td>
+                                <td class="p-3"><div class="text-sm font-bold">${clicks} / ${limit}</div><div class="w-full bg-gray-200 rounded-full h-1.5 mt-1"><div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${progress}%"></div></div></td>
+                                <td class="p-3 text-right">${isFinished ? '<span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">Finished</span>' : '<span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded font-bold">Active</span>'}</td>
                             </tr>
                         `;
                     });
@@ -1154,28 +1021,31 @@
             });
         }
 
-        // --- 8. ADMIN CATEGORY LOGIC ---
+        // --- ADMIN CATEGORY LOGIC ---
+        function toggleTelegramAds() {
+            const isChecked = document.getElementById('newCatTelegramAds').checked;
+            document.getElementById('telegramAdInputs').classList.toggle('hidden', !isChecked);
+        }
+
         async function createCategory() {
             const name = document.getElementById('newCatName').value.trim();
             const cost = parseInt(document.getElementById('newCatCost').value);
             const timer = parseInt(document.getElementById('newCatTimer').value);
             const requiresVerify = document.getElementById('newCatVerify').checked;
+            
+            const isTelegramAd = document.getElementById('newCatTelegramAds').checked;
+            const adexoraId = isTelegramAd ? document.getElementById('newCatAdexoraId').value.trim() : null;
+            const adsgramId = isTelegramAd ? document.getElementById('newCatAdsgramId').value.trim() : null;
 
             if(!name || !cost || !timer) return Swal.fire('Error', 'সব তথ্য দিন', 'warning');
+            if(isTelegramAd && (!adexoraId || !adsgramId)) return Swal.fire('Error', 'Adexora এবং Adsgram ID দিতে হবে', 'warning');
 
             try {
-                await db.collection('categories').add({
-                    name, cost, timer, requiresVerify, createdAt: Date.now()
-                });
+                await db.collection('categories').add({ name, cost, timer, requiresVerify, isSystemAd: isTelegramAd, adexoraId, adsgramId, createdAt: Date.now() });
                 Swal.fire('Success', 'Category Added', 'success');
-                document.getElementById('newCatName').value = '';
-                document.getElementById('newCatCost').value = '';
-                document.getElementById('newCatTimer').value = '';
-                document.getElementById('newCatVerify').checked = false;
+                document.getElementById('newCatName').value = ''; document.getElementById('newCatCost').value = ''; document.getElementById('newCatTimer').value = ''; document.getElementById('newCatVerify').checked = false; document.getElementById('newCatTelegramAds').checked = false; document.getElementById('newCatAdexoraId').value = ''; document.getElementById('newCatAdsgramId').value = ''; toggleTelegramAds();
                 loadAdminCategories();
-            } catch(e) {
-                Swal.fire('Error', e.message, 'error');
-            }
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
         async function loadAdminCategories() {
@@ -1184,33 +1054,25 @@
             list.innerHTML = '';
             snap.forEach(doc => {
                 const d = doc.data();
-                const verifyBadge = d.requiresVerify ? '<span class="text-xs bg-red-100 text-red-600 px-1 rounded ml-1">Verified</span>' : '';
+                const verifyBadge = d.requiresVerify ? '<span class="text-[10px] bg-red-100 text-red-600 px-1 rounded ml-1">Verified</span>' : '';
+                const sysBadge = d.isSystemAd ? '<span class="text-[10px] bg-purple-100 text-purple-700 px-1 rounded ml-1">Telegram Ads</span>' : '';
                 list.innerHTML += `
                     <li class="flex justify-between items-center bg-gray-50 p-2 rounded border">
-                        <div>
-                            <span class="font-bold">${d.name}</span> ${verifyBadge}
-                            <div class="text-xs text-gray-500">Cost: ${d.cost} | Time: ${d.timer}s</div>
-                        </div>
+                        <div><span class="font-bold text-sm">${d.name}</span> ${verifyBadge} ${sysBadge}<div class="text-xs text-gray-500">Cost: ${d.cost} | Time: ${d.timer}s</div></div>
                         <button onclick="deleteCategory('${doc.id}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                     </li>
                 `;
             });
         }
 
-        async function deleteCategory(id) {
-            if(confirm('Are you sure?')) {
-                await db.collection('categories').doc(id).delete();
-                loadAdminCategories();
-            }
-        }
+        async function deleteCategory(id) { if(confirm('Are you sure?')) { await db.collection('categories').doc(id).delete(); loadAdminCategories(); } }
 
-        // --- 9. UTILS & WALLET LOGIC ---
+        // --- UTILS & WALLET LOGIC ---
         function copyRefCode() { navigator.clipboard.writeText(currentUser.username); Swal.fire('Copied', 'Code Copied!', 'success'); }
         function copyRefLink() { const link = document.getElementById('myRefLink').value; navigator.clipboard.writeText(link); Swal.fire('Copied', 'Link Copied!', 'success'); }
 
         function switchWalletTab(tab) {
-            document.getElementById('deposit-form').classList.toggle('hidden', tab !== 'deposit');
-            document.getElementById('withdraw-form').classList.toggle('hidden', tab !== 'withdraw');
+            document.getElementById('deposit-form').classList.toggle('hidden', tab !== 'deposit'); document.getElementById('withdraw-form').classList.toggle('hidden', tab !== 'withdraw');
             document.getElementById('tab-deposit').className = tab === 'deposit' ? "flex-1 py-2 rounded-lg font-bold text-indigo-600 bg-indigo-50 transition" : "flex-1 py-2 rounded-lg font-bold text-gray-500 hover:text-indigo-600 transition";
             document.getElementById('tab-withdraw').className = tab === 'withdraw' ? "flex-1 py-2 rounded-lg font-bold text-green-600 bg-green-50 transition" : "flex-1 py-2 rounded-lg font-bold text-gray-500 hover:text-indigo-600 transition";
         }
@@ -1218,23 +1080,20 @@
         async function submitDeposit() {
             const method = document.getElementById('depMethod').value; const amount = parseFloat(document.getElementById('depAmount').value); const trx = document.getElementById('depTrx').value.trim(); const sender = document.getElementById('depSender').value.trim();
             if(!amount || !trx || !sender) return Swal.fire('Error', 'সব তথ্য দিন (টাকা, নাম্বার, TrxID)', 'error');
-            await db.collection('transactions').add({ userId: currentUser.uid, type: 'deposit', method, amount, trxId: trx, senderNumber: sender, status: 'pending', timestamp: Date.now() });
-            Swal.fire('Submitted', 'রিকুয়েস্ট পেন্ডিং আছে।', 'success'); loadTransactions();
+            await db.collection('transactions').add({ userId: currentUser.uid, type: 'deposit', method, amount, trxId: trx, senderNumber: sender, status: 'pending', timestamp: Date.now() }); Swal.fire('Submitted', 'রিকুয়েস্ট পেন্ডিং আছে।', 'success'); loadTransactions();
         }
 
         async function submitWithdraw() {
             const method = document.getElementById('withMethod').value; const points = parseInt(document.getElementById('withPoints').value); const account = document.getElementById('withAccount').value.trim();
             if(points < 5000) return Swal.fire('Limit', 'মিনিমাম ৫০০০ পয়েন্ট', 'warning'); if(currentUser.points < points) return Swal.fire('Error', 'পর্যাপ্ত পয়েন্ট নেই', 'error');
             await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-points) });
-            await db.collection('transactions').add({ userId: currentUser.uid, type: 'withdraw', method, points, account, status: 'pending', timestamp: Date.now() });
-            Swal.fire('Success', 'উইথড্র রিকুয়েস্ট সাবমিট হয়েছে', 'success'); loadTransactions();
+            await db.collection('transactions').add({ userId: currentUser.uid, type: 'withdraw', method, points, account, status: 'pending', timestamp: Date.now() }); Swal.fire('Success', 'উইথড্র রিকুয়েস্ট সাবমিট হয়েছে', 'success'); loadTransactions();
         }
 
         function loadTransactions() {
             const tbody = document.getElementById('trxHistory');
             db.collection('transactions').where('userId', '==', currentUser.uid).orderBy('timestamp', 'desc').limit(10).onSnapshot(snapshot => {
-                tbody.innerHTML = '';
-                if(snapshot.empty) tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-gray-400">No records</td></tr>';
+                tbody.innerHTML = ''; if(snapshot.empty) tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-gray-400">No records</td></tr>';
                 snapshot.forEach(doc => {
                     const d = doc.data(); const color = d.status === 'pending' ? 'text-yellow-600' : (d.status === 'approved' ? 'text-green-600' : 'text-red-600');
                     const statusIcon = d.status === 'pending' ? '<i class="far fa-clock"></i>' : (d.status === 'approved' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>');
@@ -1244,52 +1103,39 @@
             });
         }
 
-        // --- 10. LEADERBOARD ---
         async function loadLeaderboard() {
-            const list = document.getElementById('leaderboardList');
-            list.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
-            const snap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(10).get();
-            list.innerHTML = ''; let rank = 1;
+            const list = document.getElementById('leaderboardList'); list.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Loading...</td></tr>';
+            const snap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(10).get(); list.innerHTML = ''; let rank = 1;
             snap.forEach(doc => {
                 const u = doc.data(); const tasks = u.weeklyTasks || 0; let rankIcon = rank; let prizeText = '-';
                 if(rank===1) { rankIcon = '🥇'; prizeText = '20k Pts'; } if(rank===2) { rankIcon = '🥈'; prizeText = '8k Pts'; } if(rank===3) { rankIcon = '🥉'; prizeText = '5k Pts'; }
-                list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-4 font-bold text-gray-500">${rankIcon}</td><td class="p-4 font-bold text-gray-700">${u.username}</td><td class="p-4 text-center font-mono text-indigo-600 font-bold">${tasks}</td><td class="p-4 text-right text-xs font-bold text-orange-600">${prizeText}</td></tr>`;
-                rank++;
+                list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-4 font-bold text-gray-500">${rankIcon}</td><td class="p-4 font-bold text-gray-700">${u.username}</td><td class="p-4 text-center font-mono text-indigo-600 font-bold">${tasks}</td><td class="p-4 text-right text-xs font-bold text-orange-600">${prizeText}</td></tr>`; rank++;
             });
         }
 
-        // --- 11. REFERRAL HISTORY ---
         function loadReferralHistory() {
             const list = document.getElementById('refHistoryList'); list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>';
             db.collection('users').where('referredBy', '==', currentUser.username).orderBy('createdAt', 'desc').limit(20).get().then(snap => {
                 list.innerHTML = '';
                 if(snap.empty) { list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">No referrals yet</td></tr>'; } 
                 else { snap.forEach(doc => { const d = doc.data(); const date = new Date(d.createdAt).toLocaleDateString(); list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-3 font-bold text-gray-700">${d.username}</td><td class="p-3 text-xs text-gray-500">${date}</td><td class="p-3 text-right text-green-600 font-bold">+500</td></tr>`; }); }
-            }).catch(err => { console.error(err); list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-400">Error loading history (Check Index)</td></tr>'; });
+            }).catch(err => { list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-400">Error loading history</td></tr>'; });
         }
 
-        // --- 12. ADMIN: WEEKLY RESET LOGIC ---
         async function resetWeeklyLeaderboard() {
             if(!confirm("আপনি কি নিশ্চিত? এটি ১ম ৩ জনকে পুরস্কার দিবে এবং সবার টাস্ক কাউন্ট ০ করে দিবে।")) return;
             document.getElementById('loader').classList.remove('hidden');
             try {
-                const winnersSnap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(3).get();
-                const prizes =[20000, 8000, 5000];
+                const winnersSnap = await db.collection('users').orderBy('weeklyTasks', 'desc').limit(3).get(); const prizes =[20000, 8000, 5000];
                 const prizePromises = winnersSnap.docs.map((doc, index) => { if(doc.data().weeklyTasks > 0) { return db.collection('users').doc(doc.id).update({ points: firebase.firestore.FieldValue.increment(prizes[index]) }); } });
                 await Promise.all(prizePromises);
-
-                const allUsersSnap = await db.collection('users').get();
-                const batch = db.batch(); let count = 0;
-                allUsersSnap.forEach(doc => { batch.update(doc.ref, { weeklyTasks: 0 }); count++; });
-                await batch.commit();
-
+                const allUsersSnap = await db.collection('users').get(); const batch = db.batch(); let count = 0;
+                allUsersSnap.forEach(doc => { batch.update(doc.ref, { weeklyTasks: 0 }); count++; }); await batch.commit();
                 await db.collection('notifications').add({ target: 'all', message: 'সাপ্তাহিক লিডারবোর্ড রিসেট হয়েছে এবং বিজয়ীদের পুরস্কার দেওয়া হয়েছে! নতুন সপ্তাহ শুরু!', timestamp: Date.now() });
-                document.getElementById('loader').classList.add('hidden');
-                Swal.fire('Success', `সফলভাবে রিসেট হয়েছে! ${count} জন ইউজারের ডাটা আপডেট হয়েছে।`, 'success');
+                document.getElementById('loader').classList.add('hidden'); Swal.fire('Success', `সফলভাবে রিসেট হয়েছে! ${count} জন ইউজারের ডাটা আপডেট হয়েছে।`, 'success');
             } catch (error) { document.getElementById('loader').classList.add('hidden'); Swal.fire('Error', error.message, 'error'); }
         }
 
-        // --- 13. Notifications ---
         function toggleNotifications() { document.getElementById('notif-dropdown').classList.toggle('hidden'); }
         function listenToNotifications() {
             db.collection('notifications').where('target', 'in', [currentUser.uid, 'all']).orderBy('timestamp', 'desc').limit(10).onSnapshot(snapshot => {
@@ -1299,13 +1145,8 @@
                 badge.classList.toggle('hidden', !hasUnread);
             });
         }
-        function markAllRead() {
-            db.collection('notifications').where('target', 'in',[currentUser.uid, 'all']).limit(10).get().then(snap => { snap.forEach(doc => localStorage.setItem(`read_${doc.id}`, 'true')); document.getElementById('notif-badge').classList.add('hidden'); toggleNotifications(); });
-        }
-        async function sendAdminNotification() {
-            const target = document.getElementById('adminNotifTarget').value.trim(); const msg = document.getElementById('adminNotifMsg').value.trim(); if(!msg) return;
-            await db.collection('notifications').add({ target, message: msg, timestamp: Date.now() }); Swal.fire('Sent', 'Notification sent', 'success');
-        }
+        function markAllRead() { db.collection('notifications').where('target', 'in',[currentUser.uid, 'all']).limit(10).get().then(snap => { snap.forEach(doc => localStorage.setItem(`read_${doc.id}`, 'true')); document.getElementById('notif-badge').classList.add('hidden'); toggleNotifications(); }); }
+        async function sendAdminNotification() { const target = document.getElementById('adminNotifTarget').value.trim(); const msg = document.getElementById('adminNotifMsg').value.trim(); if(!msg) return; await db.collection('notifications').add({ target, message: msg, timestamp: Date.now() }); Swal.fire('Sent', 'Notification sent', 'success'); }
 
     </script>
 </body>
