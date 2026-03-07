@@ -12,8 +12,7 @@
 
     <!-- Ad Networks SDKs -->
     <script src="https://js.adsgram.ai/ig.js"></script>
-    <!-- Adexora SDK (Adexora এর সঠিক js link টি যদি ভিন্ন হয়, তবে এখানে রিপ্লেস করে নিবেন) -->
-    <script src="https://js.adexora.com/sdk.js"></script>
+    <script src="https://adexora.com/cdn/ads.js?id=1967"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
@@ -972,24 +971,49 @@
 
             const isAdexora = adName.includes("Adexora");
 
-            try {
-                if (isAdexora) {
-                    // Adexora SDK Integration
-                    if (typeof window.Adexora === 'undefined') {
-                        throw new Error("Adexora SDK is not loaded. Please check the SDK URL.");
+            if (isAdexora) {
+                // Adexora Execution Logic
+                const playAdexora = () => {
+                    if (typeof window.showAdexora !== 'function') {
+                        Swal.fire('Error', 'Adexora SDK is not loaded properly.', 'error');
+                        return;
                     }
                     
-                    const adController = window.Adexora.init({ blockId: adId });
-                    adController.show().then(() => {
+                    window.showAdexora()
+                      .then(() => {
+                        // ✅ Your reward logic here
                         Swal.close();
                         processSystemTaskReward(catId, points);
-                    }).catch((err) => {
-                        console.error(err);
+                      })
+                      .catch(e => {
+                        // ❌ Handle errors here
+                        console.error("Adexora Error:", e);
                         Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
-                    });
+                      });
+                };
 
+                // Dynamic loading check if Admin sets a different Adexora ID than the default 1967
+                if (adId && adId !== '1967') {
+                    const existingScript = document.getElementById('adexora-dynamic-script');
+                    if (existingScript) existingScript.remove();
+
+                    const script = document.createElement('script');
+                    script.id = 'adexora-dynamic-script';
+                    script.src = `https://adexora.com/cdn/ads.js?id=${adId}`;
+                    script.onload = () => playAdexora();
+                    script.onerror = () => {
+                        console.error("Failed to load dynamic Adexora script");
+                        Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
+                    };
+                    document.body.appendChild(script);
                 } else {
-                    // Adsgram SDK Integration
+                    // Uses default loaded SDK (1967) from Head
+                    playAdexora();
+                }
+
+            } else {
+                // Adsgram Execution Logic
+                try {
                     if (typeof window.Adsgram === 'undefined') {
                         throw new Error("Adsgram SDK is not loaded.");
                     }
@@ -999,13 +1023,13 @@
                         Swal.close();
                         processSystemTaskReward(catId, points);
                     }).catch((err) => {
-                        console.error(err);
+                        console.error("Adsgram Error:", err);
                         Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
                     });
+                } catch (error) {
+                    console.error("Ad execution error:", error);
+                    Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
                 }
-            } catch (error) {
-                console.error("Ad execution error:", error);
-                Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
             }
         }
 
