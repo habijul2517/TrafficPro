@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Ad Networks SDKs -->
+    <script src="https://js.adsgram.ai/ig.js"></script>
+    <!-- Adexora SDK (Adexora এর সঠিক js link টি যদি ভিন্ন হয়, তবে এখানে রিপ্লেস করে নিবেন) -->
+    <script src="https://js.adexora.com/sdk.js"></script>
+
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
         .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
@@ -845,7 +850,7 @@
                                         </div>
                                         <div class="overflow-hidden">
                                             <h4 class="font-bold text-gray-800 truncate w-40 md:w-56">${adName}</h4>
-                                            <p class="text-xs text-gray-500">অপেক্ষা: ${currentCategoryTimer} সেকেন্ড</p>
+                                            <p class="text-xs text-gray-500">অপেক্ষা: Video দেখা পর্যন্ত</p>
                                         </div>
                                     </div>
                                     <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-bold">+${currentCategoryCost}</span>
@@ -956,17 +961,52 @@
 
         function startSystemTask(catId, adName, adId, points, seconds) {
             Swal.fire({
-                title: adName + ' Load হচ্ছে...',
-                html: `<div class="mb-4 text-xs text-gray-500">Network ID: ${adId}</div><div class="text-5xl font-bold text-purple-600 mb-2" id="timerCount">${seconds}</div><div class="text-sm text-gray-500">সেকেন্ড বাকি</div>`,
-                allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false,
+                title: 'অপেক্ষা করুন...',
+                text: 'আপনার জন্য একটি Ad প্রস্তুত করা হচ্ছে...',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
                 didOpen: () => {
-                    let timeLeft = seconds; const timerDisplay = document.getElementById('timerCount');
-                    const interval = setInterval(() => {
-                        timeLeft--; if(timerDisplay) timerDisplay.innerText = timeLeft;
-                        if (timeLeft <= 0) { clearInterval(interval); processSystemTaskReward(catId, points); }
-                    }, 1000);
+                    Swal.showLoading();
                 }
             });
+
+            const isAdexora = adName.includes("Adexora");
+
+            try {
+                if (isAdexora) {
+                    // Adexora SDK Integration
+                    if (typeof window.Adexora === 'undefined') {
+                        throw new Error("Adexora SDK is not loaded. Please check the SDK URL.");
+                    }
+                    
+                    const adController = window.Adexora.init({ blockId: adId });
+                    adController.show().then(() => {
+                        Swal.close();
+                        processSystemTaskReward(catId, points);
+                    }).catch((err) => {
+                        console.error(err);
+                        Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
+                    });
+
+                } else {
+                    // Adsgram SDK Integration
+                    if (typeof window.Adsgram === 'undefined') {
+                        throw new Error("Adsgram SDK is not loaded.");
+                    }
+                    
+                    const adController = window.Adsgram.init({ blockId: adId });
+                    adController.show().then(() => {
+                        Swal.close();
+                        processSystemTaskReward(catId, points);
+                    }).catch((err) => {
+                        console.error(err);
+                        Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
+                    });
+                }
+            } catch (error) {
+                console.error("Ad execution error:", error);
+                Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
+            }
         }
 
         async function processSystemTaskReward(catId, points) {
@@ -1204,7 +1244,7 @@
         
         // --- Index Free Notification Read ---
         function listenToNotifications() {
-            db.collection('notifications').where('target', 'in', [currentUser.uid, 'all']).onSnapshot(snapshot => {
+            db.collection('notifications').where('target', 'in',[currentUser.uid, 'all']).onSnapshot(snapshot => {
                 const list = document.getElementById('notif-list'); const badge = document.getElementById('notif-badge'); list.innerHTML = ''; let hasUnread = false;
                 if(snapshot.empty) { list.innerHTML = '<p class="p-4 text-center text-xs text-gray-400">কোনো নোটিফিকেশন নেই</p>'; } 
                 else { 
