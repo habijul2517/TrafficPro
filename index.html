@@ -146,7 +146,7 @@
             </nav>
 
             <div class="p-4 border-t bg-gray-50">
-                <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-100 p-2 rounded-lg transition">
+                <button onclick="logout()" class="hidden w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-100 p-2 rounded-lg transition">
                     <i class="fas fa-sign-out-alt"></i> <span>লগআউট</span>
                 </button>
             </div>
@@ -297,6 +297,13 @@
                     <!-- Withdraw Form -->
                     <div id="withdraw-form" class="bg-white rounded-xl shadow-md p-6 hidden">
                         <h3 class="text-lg font-bold mb-4 text-green-600 border-b pb-2">উইথড্র করুন</h3>
+                        
+                        <!-- Referral Condition Alert -->
+                        <div id="withdraw-info" class="bg-blue-50 border-l-4 border-blue-400 p-3 text-sm text-blue-800 mb-4 shadow-sm rounded-r">
+                            <p><i class="fas fa-info-circle mr-1"></i> উইথড্র করতে আপনার মিনিমাম <span id="reqMinRefText" class="font-bold text-lg">5</span> টি সফল রেফার প্রয়োজন।</p>
+                            <p class="mt-1 text-xs text-gray-600">আপনার বর্তমান সফল রেফার: <span id="userTotalRefText" class="font-bold text-indigo-600">0</span> টি।</p>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">পেমেন্ট মেথড</label>
@@ -446,8 +453,19 @@
                         <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                             <i class="fas fa-gift text-5xl text-purple-500 mb-4 animate-bounce"></i>
                             <h3 class="text-2xl font-bold text-gray-800">ইনভাইট করুন</h3>
-                            <p class="text-gray-500 mb-6 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান <span class="text-green-600 font-bold">৫০০ পয়েন্ট!</span></p>
+                            <p class="text-gray-500 mb-2 mt-2">আপনার বন্ধুদের জয়েন করান এবং প্রতি রেফারে পান <span class="text-green-600 font-bold">৫০০ পয়েন্ট!</span></p>
+                            <p class="text-xs text-orange-500 mb-4 font-bold bg-orange-50 inline-block px-3 py-1 rounded-full border border-orange-100">(শর্ত: রেফার করা বন্ধুকে <span id="refReqTasksText">10</span> টি কাজ সম্পন্ন করতে হবে)</p>
                             
+                            <div class="flex justify-center mb-6">
+                                <div class="bg-indigo-50 border border-indigo-200 px-6 py-3 rounded-lg flex items-center gap-3">
+                                    <i class="fas fa-users text-indigo-600 text-2xl"></i>
+                                    <div class="text-left">
+                                        <div class="text-xs text-indigo-500 uppercase font-bold">সফল রেফার</div>
+                                        <div class="text-2xl font-bold text-indigo-800"><span id="displayTotalReferrals">0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="mb-4">
                                 <p class="text-sm text-gray-500 mb-1">আপনার রেফার কোড</p>
                                 <div class="bg-gray-100 p-3 rounded flex justify-between items-center border border-dashed border-gray-400">
@@ -476,7 +494,7 @@
                                     <tr>
                                         <th class="p-3">User</th>
                                         <th class="p-3">Date</th>
-                                        <th class="p-3 text-right">Bonus</th>
+                                        <th class="p-3 text-right">Status/Bonus</th>
                                     </tr>
                                 </thead>
                                 <tbody id="refHistoryList" class="divide-y">
@@ -491,6 +509,24 @@
                 <div id="view-admin" class="view-section hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
+                        <!-- Referral & Withdraw Settings -->
+                        <div class="bg-white rounded-xl shadow p-6 border-t-4 border-green-500 col-span-1 md:col-span-2">
+                            <h3 class="text-xl font-bold mb-4 text-green-600"><i class="fas fa-cogs mr-2"></i> Withdraw & Referral Settings</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="bg-gray-50 p-3 rounded border">
+                                    <label class="block text-sm font-bold mb-1 text-gray-700">উইথড্র করার জন্য মিনিমাম রেফার</label>
+                                    <p class="text-xs text-gray-500 mb-2">ইউজারকে টাকা তুলতে কমপক্ষে কতগুলো সফল রেফার করতে হবে।</p>
+                                    <input type="number" id="adminMinRef" class="w-full border p-2 rounded outline-none focus:border-green-500">
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded border">
+                                    <label class="block text-sm font-bold mb-1 text-gray-700">রেফার বোনাসের জন্য প্রয়োজনীয় টাস্ক</label>
+                                    <p class="text-xs text-gray-500 mb-2">রেফার করা ইউজারকে কমিশন পেতে কমপক্ষে কতগুলো টাস্ক করতে হবে।</p>
+                                    <input type="number" id="adminReqTasks" class="w-full border p-2 rounded outline-none focus:border-green-500">
+                                </div>
+                            </div>
+                            <button onclick="saveAdminSettings()" class="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700 shadow transition">Save Settings</button>
+                        </div>
+
                         <!-- Notification Sender -->
                         <div class="bg-white rounded-xl shadow p-6 border-t-4 border-red-500">
                             <h3 class="text-xl font-bold mb-4 text-red-600">Admin Notification</h3>
@@ -571,6 +607,9 @@
         let currentUser = null;
         let unsubscribeNotifs = null;
         
+        // Admin Config Variables
+        let adminSettings = { minRefToWithdraw: 5, reqTasksForRef: 10, refBonus: 500 };
+
         // Task Variables
         let currentCategoryId = null; 
         let currentCategoryRequiresVerify = false; 
@@ -581,6 +620,16 @@
         let currentCategoryTimer = 0;
 
         window.onload = () => {
+            // Listen to Admin Settings
+            db.collection('settings').doc('general').onSnapshot(doc => {
+                if(doc.exists) { 
+                    adminSettings = { ...adminSettings, ...doc.data() }; 
+                } else {
+                    db.collection('settings').doc('general').set(adminSettings);
+                }
+                updateReferralUI();
+            });
+
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     const userDoc = await db.collection('users').doc(user.uid).get();
@@ -595,6 +644,19 @@
                 }
             });
         };
+
+        function updateReferralUI() {
+            if(document.getElementById('reqMinRefText')) document.getElementById('reqMinRefText').innerText = adminSettings.minRefToWithdraw;
+            if(document.getElementById('refReqTasksText')) document.getElementById('refReqTasksText').innerText = adminSettings.reqTasksForRef;
+            if(document.getElementById('adminMinRef')) document.getElementById('adminMinRef').value = adminSettings.minRefToWithdraw;
+            if(document.getElementById('adminReqTasks')) document.getElementById('adminReqTasks').value = adminSettings.reqTasksForRef;
+            
+            if(currentUser) {
+                const tr = currentUser.totalReferrals || 0;
+                if(document.getElementById('userTotalRefText')) document.getElementById('userTotalRefText').innerText = tr;
+                if(document.getElementById('displayTotalReferrals')) document.getElementById('displayTotalReferrals').innerText = tr;
+            }
+        }
 
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('login-form');
@@ -636,28 +698,25 @@
                 const userCheck = await db.collection('users').where('username', '==', username).get();
                 if(!userCheck.empty) throw new Error("Username already taken!");
 
-                let referredBy = null; let referrerDocId = null;
+                let referredBy = null; 
                 if (refCode) {
                     const refQuery = await db.collection('users').where('username', '==', refCode).get();
                     if(refQuery.empty) throw new Error("ভুল রেফার কোড!");
-                    else { referredBy = refCode; referrerDocId = refQuery.docs[0].id; }
+                    else { referredBy = refCode; }
                 }
 
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 const uid = cred.user.uid;
 
+                // Points not given immediately anymore, will be given when user completes 10 tasks
                 await db.collection('users').doc(uid).set({
                     username, email, points: 50, createdAt: Date.now(), 
-                    totalReferrals: 0, checkInStreak: 0, lastCheckInDate: '', 
+                    totalReferrals: 0, 
+                    totalTasksCompleted: 0,     // Required to track bonus threshold
+                    referralBonusPaid: false,   // Keeps track if referrer got points for this user
+                    checkInStreak: 0, lastCheckInDate: '', 
                     role: 'user', weeklyTasks: 0, referredBy: referredBy
                 });
-
-                if (referrerDocId) {
-                    await db.collection('users').doc(referrerDocId).update({
-                        points: firebase.firestore.FieldValue.increment(500),
-                        totalReferrals: firebase.firestore.FieldValue.increment(1)
-                    });
-                }
             } catch (error) {
                 document.getElementById('loader').classList.add('hidden');
                 Swal.fire('Error', error.message, 'error');
@@ -671,10 +730,19 @@
             document.getElementById('app-section').classList.remove('hidden');
             document.getElementById('loader').classList.add('hidden');
             updateUserDisplay();
+            updateReferralUI();
             
             db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
-                const data = doc.data(); currentUser.points = data.points; currentUser.checkInStreak = data.checkInStreak || 0;
-                currentUser.lastCheckInDate = data.lastCheckInDate || ""; currentUser.role = data.role || 'user'; updateUserDisplay();
+                const data = doc.data(); 
+                currentUser.points = data.points; 
+                currentUser.checkInStreak = data.checkInStreak || 0;
+                currentUser.totalReferrals = data.totalReferrals || 0;
+                currentUser.totalTasksCompleted = data.totalTasksCompleted || 0;
+                currentUser.referralBonusPaid = data.referralBonusPaid || false;
+                currentUser.lastCheckInDate = data.lastCheckInDate || ""; 
+                currentUser.role = data.role || 'user'; 
+                updateUserDisplay();
+                updateReferralUI();
             });
 
             if(currentUser.role === 'admin' || currentUser.username === 'admin') {
@@ -824,7 +892,6 @@
             list.innerHTML = '<div class="col-span-2 text-center py-4"><i class="fas fa-spinner fa-spin text-2xl text-indigo-600"></i></div>';
             
             try {
-                // If it is an Admin Telegram Auto Ad Category
                 if(currentCategoryIsSystemAd) {
                     const currentHourId = new Date().toISOString().slice(0, 13);
                     const sysDoc = await db.collection('users').doc(currentUser.uid).collection('hourlyTasks').doc(currentHourId).get();
@@ -864,14 +931,12 @@
                     return;
                 }
 
-                // Normal Campaign Tasks (Index Free Setup)
                 const snap = await db.collection('campaigns').where('categoryId', '==', currentCategoryId).get();
                 let campaignsList =[];
                 snap.forEach(doc => {
                     const data = doc.data();
                     if(data.active === true) { campaignsList.push({ id: doc.id, ...data }); }
                 });
-                // Sort by new
                 campaignsList.sort((a, b) => b.createdAt - a.createdAt);
                 campaignsList = campaignsList.slice(0, 30);
 
@@ -925,7 +990,7 @@
             window.open(url, '_blank'); let timeLeft = seconds;
             Swal.fire({
                 title: 'যাচাই করা হচ্ছে...',
-                html: `<div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেন না।</div><div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div><div class="text-sm text-gray-500">সেকেন্ড বাকি</div>`,
+                html: `<div class="mb-4">দয়া করে ট্যাব ক্লোজ করবেন মোহ না।</div><div class="text-5xl font-bold text-indigo-600 mb-2" id="timerCount">${timeLeft}</div><div class="text-sm text-gray-500">সেকেন্ড বাকি</div>`,
                 allowOutsideClick: false, allowEscapeKey: false, showConfirmButton: false,
                 didOpen: () => {
                     const timerDisplay = document.getElementById('timerCount');
@@ -949,11 +1014,53 @@
             });
         }
 
+        // --- CHECK REFERRAL BONUS ON EVERY TASK ---
+        async function checkReferralBonus() {
+            if (currentUser.referredBy && !currentUser.referralBonusPaid) {
+                try {
+                    const uDoc = await db.collection('users').doc(currentUser.uid).get();
+                    const d = uDoc.data();
+                    const totalTasks = d.totalTasksCompleted || 0;
+                    
+                    if (totalTasks >= adminSettings.reqTasksForRef && !d.referralBonusPaid) {
+                        const refQuery = await db.collection('users').where('username', '==', currentUser.referredBy).get();
+                        if(!refQuery.empty) {
+                            const referrerId = refQuery.docs[0].id;
+                            const batch = db.batch();
+                            
+                            batch.update(db.collection('users').doc(currentUser.uid), { referralBonusPaid: true });
+                            batch.update(db.collection('users').doc(referrerId), {
+                                points: firebase.firestore.FieldValue.increment(adminSettings.refBonus),
+                                totalReferrals: firebase.firestore.FieldValue.increment(1)
+                            });
+                            
+                            await batch.commit();
+                            currentUser.referralBonusPaid = true;
+                            
+                            // Send notification to Referrer
+                            await db.collection('notifications').add({ 
+                                target: referrerId, 
+                                message: `আপনার রেফার করা একজন ইউজার ${adminSettings.reqTasksForRef} টি কাজ সম্পন্ন করেছে! আপনি ${adminSettings.refBonus} পয়েন্ট এবং ১টি সফল রেফার পেয়েছেন।`, 
+                                timestamp: Date.now() 
+                            });
+                        }
+                    }
+                } catch(e) { console.error("Referral Check Error:", e); }
+            }
+        }
+
         async function processTaskReward(taskId, points) {
             try {
-                await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(points), weeklyTasks: firebase.firestore.FieldValue.increment(1) });
+                await db.collection('users').doc(currentUser.uid).update({ 
+                    points: firebase.firestore.FieldValue.increment(points), 
+                    weeklyTasks: firebase.firestore.FieldValue.increment(1),
+                    totalTasksCompleted: firebase.firestore.FieldValue.increment(1)
+                });
                 await db.collection('campaigns').doc(taskId).update({ clicks: firebase.firestore.FieldValue.increment(1) });
                 await db.collection('users').doc(currentUser.uid).collection('completedTasks').doc(taskId).set({ timestamp: Date.now() });
+                
+                await checkReferralBonus();
+
                 Swal.fire({ icon: 'success', title: 'অভিনন্দন!', text: `${points} পয়েন্ট যোগ হয়েছে।`, timer: 2000, showConfirmButton: false }); loadTasks(); 
             } catch (error) { Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error'); }
         }
@@ -964,80 +1071,56 @@
                 text: 'আপনার জন্য একটি Ad প্রস্তুত করা হচ্ছে...',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
+                didOpen: () => { Swal.showLoading(); }
             });
 
             const isAdexora = adName.includes("Adexora");
 
             if (isAdexora) {
-                // Adexora Execution Logic
                 const playAdexora = () => {
                     if (typeof window.showAdexora !== 'function') {
                         Swal.fire('Error', 'Adexora SDK is not loaded properly.', 'error');
                         return;
                     }
-                    
                     window.showAdexora()
-                      .then(() => {
-                        // ✅ Your reward logic here
-                        Swal.close();
-                        processSystemTaskReward(catId, points);
-                      })
-                      .catch(e => {
-                        // ❌ Handle errors here
-                        console.error("Adexora Error:", e);
-                        Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
-                      });
+                      .then(() => { Swal.close(); processSystemTaskReward(catId, points); })
+                      .catch(e => { console.error("Adexora Error:", e); Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error'); });
                 };
 
-                // Dynamic loading check if Admin sets a different Adexora ID than the default 1967
                 if (adId && adId !== '1967') {
                     const existingScript = document.getElementById('adexora-dynamic-script');
                     if (existingScript) existingScript.remove();
-
                     const script = document.createElement('script');
                     script.id = 'adexora-dynamic-script';
                     script.src = `https://adexora.com/cdn/ads.js?id=${adId}`;
                     script.onload = () => playAdexora();
-                    script.onerror = () => {
-                        console.error("Failed to load dynamic Adexora script");
-                        Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
-                    };
+                    script.onerror = () => { console.error("Failed to load dynamic script"); Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error'); };
                     document.body.appendChild(script);
-                } else {
-                    // Uses default loaded SDK (1967) from Head
-                    playAdexora();
-                }
+                } else { playAdexora(); }
 
             } else {
-                // Adsgram Execution Logic
                 try {
-                    if (typeof window.Adsgram === 'undefined') {
-                        throw new Error("Adsgram SDK is not loaded.");
-                    }
-                    
+                    if (typeof window.Adsgram === 'undefined') { throw new Error("Adsgram SDK is not loaded."); }
                     const adController = window.Adsgram.init({ blockId: adId });
-                    adController.show().then(() => {
-                        Swal.close();
-                        processSystemTaskReward(catId, points);
-                    }).catch((err) => {
-                        console.error("Adsgram Error:", err);
-                        Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
+                    adController.show().then(() => { Swal.close(); processSystemTaskReward(catId, points); }).catch((err) => {
+                        console.error("Adsgram Error:", err); Swal.fire('Failed', 'আপনি সম্পূর্ণ Ad দেখেননি বা Ad লোড হতে সমস্যা হয়েছে।', 'error');
                     });
-                } catch (error) {
-                    console.error("Ad execution error:", error);
-                    Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error');
-                }
+                } catch (error) { console.error("Ad execution error:", error); Swal.fire('Error', 'Ad Network সাময়িক সময়ের জন্য কাজ করছে না।', 'error'); }
             }
         }
 
         async function processSystemTaskReward(catId, points) {
             try {
                 const currentHourId = new Date().toISOString().slice(0, 13);
-                await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(points), weeklyTasks: firebase.firestore.FieldValue.increment(1) });
+                await db.collection('users').doc(currentUser.uid).update({ 
+                    points: firebase.firestore.FieldValue.increment(points), 
+                    weeklyTasks: firebase.firestore.FieldValue.increment(1),
+                    totalTasksCompleted: firebase.firestore.FieldValue.increment(1)
+                });
                 await db.collection('users').doc(currentUser.uid).collection('hourlyTasks').doc(currentHourId).set({ [catId]: firebase.firestore.FieldValue.increment(1) }, { merge: true });
+                
+                await checkReferralBonus();
+
                 Swal.fire({ icon: 'success', title: 'অভিনন্দন!', text: `${points} পয়েন্ট যোগ হয়েছে।`, timer: 2000, showConfirmButton: false }); loadTasks(); 
             } catch (error) { Swal.fire('Error', 'নেটওয়ার্ক সমস্যা।', 'error'); }
         }
@@ -1096,7 +1179,6 @@
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
-        // --- Index Free My Campaigns ---
         function loadMyCampaigns() {
             const tbody = document.getElementById('myCampaignList');
             db.collection('campaigns').where('owner', '==', currentUser.uid).onSnapshot(snap => {
@@ -1122,7 +1204,21 @@
             });
         }
 
-        // --- ADMIN CATEGORY LOGIC ---
+        // --- ADMIN CATEGORY & SETTINGS LOGIC ---
+        async function saveAdminSettings() {
+            const minRef = parseInt(document.getElementById('adminMinRef').value) || 5;
+            const reqTasks = parseInt(document.getElementById('adminReqTasks').value) || 10;
+            
+            try {
+                await db.collection('settings').doc('general').set({
+                    minRefToWithdraw: minRef,
+                    reqTasksForRef: reqTasks,
+                    refBonus: 500
+                }, { merge: true });
+                Swal.fire('Saved', 'Withdraw এবং Referral সেটিং আপডেট হয়েছে।', 'success');
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
         function toggleTelegramAds() {
             const isChecked = document.getElementById('newCatTelegramAds').checked;
             document.getElementById('telegramAdInputs').classList.toggle('hidden', !isChecked);
@@ -1149,7 +1245,6 @@
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
 
-        // --- Index Free Admin Categories ---
         async function loadAdminCategories() {
             const list = document.getElementById('adminCatList');
             const snap = await db.collection('categories').get();
@@ -1190,13 +1285,18 @@
         }
 
         async function submitWithdraw() {
+            // Check Required Referrals Before Withdrawal
+            const userRefs = currentUser.totalReferrals || 0;
+            if (userRefs < adminSettings.minRefToWithdraw) {
+                return Swal.fire('Withdraw Limit', `উইথড্র করার জন্য আপনার মিনিমাম ${adminSettings.minRefToWithdraw} টি সফল রেফার প্রয়োজন। আপনার বর্তমান সফল রেফার: ${userRefs} টি।`, 'warning');
+            }
+
             const method = document.getElementById('withMethod').value; const points = parseInt(document.getElementById('withPoints').value); const account = document.getElementById('withAccount').value.trim();
             if(points < 5000) return Swal.fire('Limit', 'মিনিমাম ৫০০০ পয়েন্ট', 'warning'); if(currentUser.points < points) return Swal.fire('Error', 'পর্যাপ্ত পয়েন্ট নেই', 'error');
             await db.collection('users').doc(currentUser.uid).update({ points: firebase.firestore.FieldValue.increment(-points) });
             await db.collection('transactions').add({ userId: currentUser.uid, type: 'withdraw', method, points, account, status: 'pending', timestamp: Date.now() }); Swal.fire('Success', 'উইথড্র রিকুয়েস্ট সাবমিট হয়েছে', 'success'); loadTransactions();
         }
 
-        // --- Index Free Transaction Load ---
         function loadTransactions() {
             const tbody = document.getElementById('trxHistory');
             db.collection('transactions').where('userId', '==', currentUser.uid).onSnapshot(snapshot => {
@@ -1227,7 +1327,6 @@
             });
         }
 
-        // --- Index Free Referral History ---
         function loadReferralHistory() {
             const list = document.getElementById('refHistoryList'); list.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Loading...</td></tr>';
             db.collection('users').where('referredBy', '==', currentUser.username).get().then(snap => {
@@ -1241,7 +1340,23 @@
                 else { 
                     refs.slice(0, 20).forEach(d => { 
                         const date = new Date(d.createdAt).toLocaleDateString(); 
-                        list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-3 font-bold text-gray-700">${d.username}</td><td class="p-3 text-xs text-gray-500">${date}</td><td class="p-3 text-right text-green-600 font-bold">+500</td></tr>`; 
+                        const userTasks = d.totalTasksCompleted || 0;
+                        const reqTasks = adminSettings.reqTasksForRef;
+
+                        let statusHtml = '';
+                        if (d.referralBonusPaid) {
+                            statusHtml = `<span class="text-green-600 font-bold">+${adminSettings.refBonus} Pts</span>`;
+                        } else {
+                            statusHtml = `<div class="text-orange-500 font-bold text-xs bg-orange-50 px-2 py-1 inline-block rounded border border-orange-100">Pending (${userTasks}/${reqTasks} Tasks)</div>`;
+                        }
+
+                        list.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3 font-bold text-gray-700">${d.username}</td>
+                                <td class="p-3 text-xs text-gray-500">${date}</td>
+                                <td class="p-3 text-right">${statusHtml}</td>
+                            </tr>
+                        `; 
                     }); 
                 }
             }).catch(err => { 
@@ -1266,7 +1381,6 @@
 
         function toggleNotifications() { document.getElementById('notif-dropdown').classList.toggle('hidden'); }
         
-        // --- Index Free Notification Read ---
         function listenToNotifications() {
             db.collection('notifications').where('target', 'in',[currentUser.uid, 'all']).onSnapshot(snapshot => {
                 const list = document.getElementById('notif-list'); const badge = document.getElementById('notif-badge'); list.innerHTML = ''; let hasUnread = false;
